@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Türkiye Scholarships — Rah</title>
+<meta name="description" content="A competitive Turkish government scholarship for international students, including university placement and support throughout study.">
+<meta property="og:title" content="Türkiye Scholarships">
+<meta property="og:description" content="A competitive Turkish government scholarship for international students, including university placement and support throughout study.">
+<meta property="og:type" content="article">
+<link rel="canonical" href="https://rah.example.org/scholarships/turkiye/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../css/styles.css">
+<style>
+  .breadcrumb{ font-size:13px; color: var(--ink-faint); margin-bottom:18px; }
+  .breadcrumb a{ color: var(--ink-soft); text-decoration:none; }
+  .breadcrumb a:hover{ color: var(--lapis); }
+
+  .s-hero{ padding: 40px 0 8px; }
+  .s-hero-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:20px; flex-wrap:wrap; }
+  .s-hero h1{ font-family: var(--serif); font-weight:600; font-size:34px; color: var(--lapis-deep); margin:0 0 10px; line-height:1.2; max-width:34ch; }
+  .s-hero-meta{ display:flex; flex-wrap:wrap; gap:8px 16px; font-size:14px; color: var(--ink-soft); margin-bottom:16px; }
+  .s-hero-meta span{ display:flex; align-items:center; gap:6px; }
+  .s-hero-summary{ font-size:16px; color: var(--ink-soft); max-width:66ch; margin:0 0 22px; }
+  .funding-pill{ background: var(--sand-deep); color: var(--lapis-deep); font-size:12.5px; font-weight:700; padding:6px 13px; border-radius:999px; white-space:nowrap; }
+  .s-hero-actions{ display:flex; flex-wrap:wrap; gap:12px; margin-bottom:8px; }
+  .btn-save{
+    display:inline-flex; align-items:center; gap:8px; background:transparent; border:1.5px solid var(--sand-deep);
+    color: var(--ink); font-family: var(--sans); font-weight:600; font-size:15px; padding:14px 22px; border-radius:14px;
+    cursor:pointer; text-decoration:none; transition: border-color 0.15s;
+  }
+  .btn-save:hover{ border-color: var(--gold); }
+
+  .s-layout{ display:grid; grid-template-columns: 1.6fr 1fr; gap:34px; align-items:start; margin-top:20px; }
+  @media (max-width:900px){ .s-layout{ grid-template-columns:1fr; } }
+
+  .s-block{ background: var(--card); border:1px solid var(--sand-deep); border-radius: var(--radius); padding:24px 26px; margin-bottom:20px; }
+  .s-block h2{ font-family: var(--serif); font-weight:600; font-size:19px; color: var(--lapis-deep); margin:0 0 14px; }
+  .s-block ul{ margin:0; padding-inline-start:20px; display:flex; flex-direction:column; gap:9px; font-size:14.5px; color: var(--ink); }
+  .s-block ul li{ color:#4a3f30; }
+
+  .s-side{ position:sticky; top:82px; display:flex; flex-direction:column; gap:16px; }
+  .side-card{ background: var(--card); border:1px solid var(--sand-deep); border-radius: var(--radius); padding:20px 22px; }
+  .side-card h3{ font-family: var(--serif); font-size:15.5px; font-weight:600; color: var(--lapis-deep); margin:0 0 10px; }
+  .side-row{ display:flex; justify-content:space-between; font-size:13.5px; padding:8px 0; border-bottom:1px dashed var(--sand-deep); }
+  .side-row:last-child{ border-bottom:none; }
+  .side-row b{ color: var(--ink-soft); font-weight:600; }
+  .side-row span{ color: var(--ink); font-weight:600; text-align:right; max-width:60%; }
+
+  .match-cta{ background: var(--lapis-deep); border-radius: var(--radius); padding:20px 22px; color:#fff; }
+  .match-cta h3{ font-family: var(--serif); font-size:15.5px; font-weight:600; margin:0 0 6px; }
+  .match-cta p{ font-size:13px; color:#CBD9E4; margin:0 0 14px; }
+  .match-cta a{ display:inline-flex; align-items:center; gap:6px; background:#fff; color: var(--lapis-deep); font-weight:700; font-size:13.5px; padding:9px 16px; border-radius:999px; text-decoration:none; }
+
+  .related-row{ display:flex; flex-direction:column; gap:10px; }
+  .related-item{ display:block; padding:10px 12px; border-radius:10px; text-decoration:none; color: var(--ink); font-size:13.5px; font-weight:600; transition: background 0.15s; }
+  .related-item:hover{ background: var(--sand-deep); }
+  .related-item span{ display:block; font-size:12px; color: var(--ink-faint); font-weight:500; margin-top:2px; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap nav-row">
+    <a class="brand" href="../../index.html">
+      <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 3L34 11V29L20 37L6 29V11L20 3Z" stroke="#1B4A72" stroke-width="2" fill="#EAF1F6"/>
+        <path d="M20 12L26 15.5V22.5L20 26L14 22.5V15.5L20 12Z" fill="#C08A2E"/>
+      </svg>
+      <span class="brand-name">Rah</span>
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 6H21M3 12H21M3 18H21" stroke="#2B241C" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <nav class="nav-links" id="navLinks">
+      <a href="../../index.html" data-i18n="nav_home">Home</a>
+      <a href="../../scholarships.html" class="current" data-i18n="nav_scholarships">Scholarships</a>
+      <a href="../../profile.html" data-i18n="nav_profile">Build Your Profile</a>
+      <a href="../../guides.html" data-i18n="nav_guides">Guides</a>
+      <div class="lang-switch">
+        <button data-lang="en" class="active">EN</button>
+        <button data-lang="prs">دری</button>
+        <button data-lang="pus">پښتو</button>
+      </div>
+      <span data-auth-nav><a class="nav-cta" href="../../login.html" data-i18n="nav_login">Login / Sign Up</a></span>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="s-hero">
+    <div class="wrap">
+      <div class="breadcrumb">
+        <a href="../../index.html" data-i18n="breadcrumb_home">Home</a> / <a href="../../scholarships.html" data-i18n="breadcrumb_scholarships">Scholarships</a> / <span id="bcName">Türkiye Scholarships</span>
+      </div>
+      <div class="s-hero-top">
+        <h1 id="sHeroName">Türkiye Scholarships</h1>
+        <span class="funding-pill" id="sFunding">Fully funded</span>
+      </div>
+      <div class="s-hero-meta">
+        <span>📍 <span id="sCountry">Türkiye</span></span>
+        <span>🎓 <span id="sLevel">Bachelor&#x27;s, Master&#x27;s, PhD</span></span>
+        <span>⏳ <span id="sDeadline">Annual call; check the official calendar</span></span>
+      </div>
+      <p class="s-hero-summary" id="sSummary">A competitive Turkish government scholarship for international students, including university placement and support throughout study.</p>
+      <div class="s-hero-actions">
+        <a class="btn-primary" href="https://turkiyeburslari.gov.tr/fulltimeprograms" target="_blank" rel="noopener">
+          <span data-i18n="apply_btn">Go to official application</span>
+          <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M6 14L14 6M14 6H7M14 6V13" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a class="btn-save" href="../../login.html" id="saveBtn">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M5 3.5C5 2.7 5.7 2 6.5 2H13.5C14.3 2 15 2.7 15 3.5V17L10 13.5L5 17V3.5Z" stroke="#2B241C" stroke-width="1.5"/></svg>
+          <span data-i18n="save_btn">Save scholarship</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:16px;">
+    <div class="wrap">
+      <div class="s-layout">
+
+        <div>
+          <div class="s-block">
+            <h2 data-i18n="about_h2">About this scholarship</h2>
+            <ul id="factsList"></ul>
+          </div>
+          <div class="s-block">
+            <h2 data-i18n="eligibility_h2">Eligibility requirements</h2>
+            <ul id="eligibilityList"></ul>
+          </div>
+          <div class="s-block">
+            <h2 data-i18n="documents_h2">Required documents</h2>
+            <ul id="documentsList"></ul>
+          </div>
+          <div class="s-block">
+            <h2 data-i18n="tips_h2">Application tips</h2>
+            <ul id="tipsList"></ul>
+          </div>
+        </div>
+
+        <div class="s-side">
+          <div class="match-cta">
+            <h3 data-i18n="match_h3">See your match strength</h3>
+            <p id="matchP"></p>
+            <a href="../../login.html" data-i18n="login_link">Log in →</a>
+          </div>
+          <div class="side-card">
+            <h3 data-i18n="quick_facts_h3">Quick facts</h3>
+            <div class="side-row"><b data-i18n="qf_country">Country</b><span id="qfCountry">Türkiye</span></div>
+            <div class="side-row"><b data-i18n="qf_level">Degree level</b><span id="qfLevel">Bachelor&#x27;s, Master&#x27;s, PhD</span></div>
+            <div class="side-row"><b data-i18n="qf_funding">Funding</b><span id="qfFunding">Fully funded</span></div>
+            <div class="side-row"><b data-i18n="qf_deadline">Deadline</b><span id="qfDeadline">Annual call; check the official calendar</span></div>
+          </div>
+          <div class="side-card">
+            <h3 data-i18n="related_h3">Other scholarships to consider</h3>
+            <div class="related-row" id="relatedRow"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="cta-band">
+        <div>
+          <h2 data-i18n="cta_h2">Not sure if this is your best fit?</h2>
+          <p data-i18n="cta_p">Answer a two-minute questionnaire and Rah will rank every scholarship for your specific profile.</p>
+        </div>
+        <a class="btn-primary" href="../../finder.html" data-i18n="cta_btn">Find My Scholarships</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="../../index.html">
+          <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 3L34 11V29L20 37L6 29V11L20 3Z" stroke="#1B4A72" stroke-width="2" fill="#EAF1F6"/>
+            <path d="M20 12L26 15.5V22.5L20 26L14 22.5V15.5L20 12Z" fill="#C08A2E"/>
+          </svg>
+          <span class="brand-name">Rah</span>
+        </a>
+        <p data-i18n="footer_tagline">Rah gives general guidance based on public scholarship information. Always confirm exact deadlines and requirements on each scholarship's official page before applying.</p>
+      </div>
+      <div class="footer-col">
+        <h5 data-i18n="footer_explore_h5">Explore</h5>
+        <a href="../../finder.html" data-i18n="footer_explore_1">Find Scholarships</a>
+        <a href="../../scholarships.html" data-i18n="footer_explore_2">Browse Scholarships</a>
+        <a href="../../profile.html" data-i18n="nav_profile">Build Your Profile</a>
+        <a href="../../guides.html" data-i18n="nav_guides">Guides</a>
+      </div>
+      <div class="footer-col">
+        <h5 data-i18n="footer_account_h5">Account</h5>
+        <a href="../../login.html" data-i18n="footer_login">Log In</a>
+        <a href="../../login.html" data-i18n="footer_signup">Sign Up</a>
+      </div>
+      <div class="footer-col">
+        <h5 data-i18n="footer_guides_h5">Popular guides</h5>
+        <a href="../../guides.html" data-i18n="footer_guide1">Scholarships for Afghan students</a>
+        <a href="../../guides.html" data-i18n="footer_guide2">Fully funded scholarships</a>
+        <a href="../../guides.html" data-i18n="footer_guide3">Scholarships without IELTS</a>
+      </div>
+    </div>
+    <div class="footer-bottom" data-i18n="footer_bottom">© 2026 Rah. Built to help Afghan students find their path abroad.</div>
+  </div>
+</footer>
+
+<script src="../../js/data.js"></script>
+<script src="../../js/app.js"></script>
+<script src="../../js/i18n.js"></script>
+<script>
+  document.getElementById("navToggle").addEventListener("click", function(){
+    var links = document.getElementById("navLinks");
+    var open = links.classList.toggle("open");
+    this.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+
+  
+  const PAGE_STRINGS = {
+    en: {
+      nav_home:"Home", nav_scholarships:"Scholarships", nav_profile:"Build Your Profile", nav_guides:"Guides", nav_login:"Login / Sign Up",
+      breadcrumb_home:"Home", breadcrumb_scholarships:"Scholarships",
+      about_h2:"About this scholarship", eligibility_h2:"Eligibility requirements", documents_h2:"Required documents", tips_h2:"Application tips",
+      apply_btn:"Go to official application", save_btn:"Save scholarship", saved_btn:"Saved",
+      match_h3:"See your match strength", match_p_prefix:"Log in and complete your profile to see how well you match ", match_p_suffix:", plus a personalized explanation.", login_link:"Log in →",
+      quick_facts_h3:"Quick facts", qf_country:"Country", qf_level:"Degree level", qf_funding:"Funding", qf_deadline:"Deadline",
+      related_h3:"Other scholarships to consider",
+      cta_h2:"Not sure if this is your best fit?", cta_p:"Answer a two-minute questionnaire and Rah will rank every scholarship for your specific profile.", cta_btn:"Find My Scholarships",
+      footer_tagline:"Rah gives general guidance based on public scholarship information. Always confirm exact deadlines and requirements on each scholarship's official page before applying.",
+      footer_explore_h5:"Explore", footer_explore_1:"Find Scholarships", footer_explore_2:"Browse Scholarships",
+      footer_account_h5:"Account", footer_login:"Log In", footer_signup:"Sign Up",
+      footer_guides_h5:"Popular guides", footer_guide1:"Scholarships for Afghan students", footer_guide2:"Fully funded scholarships", footer_guide3:"Scholarships without IELTS",
+      footer_bottom:"© 2026 Rah. Built to help Afghan students find their path abroad."
+    },
+    prs: {
+      nav_home:"خانه", nav_scholarships:"بورسیه‌ها", nav_profile:"پروفایل خود را بسازید", nav_guides:"راهنماها", nav_login:"ورود / ثبت‌نام",
+      breadcrumb_home:"خانه", breadcrumb_scholarships:"بورسیه‌ها",
+      about_h2:"درباره این بورسیه", eligibility_h2:"شرایط واجد بودن", documents_h2:"اسناد مورد نیاز", tips_h2:"نکات درخواست",
+      apply_btn:"به درخواست رسمی بروید", save_btn:"ذخیره بورسیه", saved_btn:"ذخیره شد",
+      match_h3:"قوت تطبیق خود را ببینید", match_p_prefix:"وارد شوید و پروفایل خود را تکمیل کنید تا ببینید چقدر با ", match_p_suffix:" مطابقت دارید، به همراه یک توضیح شخصی.", login_link:"ورود ←",
+      quick_facts_h3:"معلومات سریع", qf_country:"کشور", qf_level:"سطح تحصیلی", qf_funding:"تمویل", qf_deadline:"ضرب‌الاجل",
+      related_h3:"سایر بورسیه‌ها برای در نظر گرفتن",
+      cta_h2:"مطمئن نیستید این بهترین گزینه شماست؟", cta_p:"به یک پرسشنامه دو دقیقه‌ای پاسخ دهید و راه هر بورسیه را برای پروفایل مشخص شما رتبه‌بندی می‌کند.", cta_btn:"بورسیه‌های من را پیدا کن",
+      footer_tagline:"راه رهنمایی عمومی را بر اساس معلومات عامه بورسیه ارائه می‌دهد. همیشه ضرب‌الاجل‌ها و شرایط دقیق را در صفحه رسمی هر بورسیه پیش از درخواست تایید کنید.",
+      footer_explore_h5:"کاوش", footer_explore_1:"بورسیه‌ها را پیدا کنید", footer_explore_2:"بورسیه‌ها را مرور کنید",
+      footer_account_h5:"حساب کاربری", footer_login:"ورود", footer_signup:"ثبت‌نام",
+      footer_guides_h5:"راهنماهای محبوب", footer_guide1:"بورسیه‌ها برای محصلان افغان", footer_guide2:"بورسیه‌های کاملاً تمویل شده", footer_guide3:"بورسیه‌ها بدون IELTS",
+      footer_bottom:"© 2026 راه. برای کمک به محصلان افغان تا مسیر خود را در خارج پیدا کنند ساخته شده است."
+    },
+    pus: {
+      nav_home:"کور", nav_scholarships:"بورسیې", nav_profile:"خپل پروفایل جوړ کړئ", nav_guides:"لارښودونه", nav_login:"ننوتل / نوم لیکنه",
+      breadcrumb_home:"کور", breadcrumb_scholarships:"بورسیې",
+      about_h2:"د دې بورسیې په اړه", eligibility_h2:"د وړتیا شرایط", documents_h2:"اړین اسناد", tips_h2:"د غوښتنلیک لارښوونې",
+      apply_btn:"رسمي غوښتنلیک ته ورشئ", save_btn:"بورسیه خوندي کړئ", saved_btn:"خوندي شوه",
+      match_h3:"خپل د مطابقت ځواک وګورئ", match_p_prefix:"ننوځئ او خپل پروفایل بشپړ کړئ چې وګورئ تاسو د ", match_p_suffix:" سره څومره مطابقت لرئ، سربېره پردې یو شخصي تشریح.", login_link:"ننوتل ←",
+      quick_facts_h3:"چټک حقایق", qf_country:"هېواد", qf_level:"زده‌کړې کچه", qf_funding:"تمویل", qf_deadline:"وروستۍ نېټه",
+      related_h3:"نورې بورسیې چې په پام کې ونیول شي",
+      cta_h2:"ډاډه نه یاست چې دا ستاسو غوره انتخاب دی؟", cta_p:"دوه دقیقې پوښتنلیک ته ځواب ورکړئ او راه به هره بورسیه ستاسو ځانګړي پروفایل ته درجه‌بندي کړي.", cta_btn:"زما بورسیې ومومئ",
+      footer_tagline:"راه عمومي لارښوونه د عامه بورسیې معلوماتو پر بنسټ وړاندې کوي. تل مخکې له غوښتنلیک نه د هرې بورسیې په رسمي پاڼه کې دقیق نېټې او شرایط تایید کړئ.",
+      footer_explore_h5:"کتنه", footer_explore_1:"بورسیې ومومئ", footer_explore_2:"بورسیې وګورئ",
+      footer_account_h5:"حساب", footer_login:"ننوتل", footer_signup:"نوم لیکنه",
+      footer_guides_h5:"مشهورې لارښودونه", footer_guide1:"د افغان زده‌کوونکو لپاره بورسیې", footer_guide2:"بشپړ تمویل شوي بورسیې", footer_guide3:"پرته له IELTS بورسیې",
+      footer_bottom:"© 2026 راه. د دې لپاره جوړ شوی چې افغان زده‌کوونکو ته د بهر لار موندلو کې مرسته وکړي."
+    }
+  };
+
+
+  const CURRENT_ID = "turkiye";
+  const RELATED_IDS = ["uwc", "opendoors", "dafi"];
+
+  function localized(s, lang){
+    if(lang === 'en' || !s.translations || !s.translations[lang]) return s;
+    return Object.assign({}, s, s.translations[lang]);
+  }
+
+  function li(items){ return items.map(t => '<li>' + t + '</li>').join(''); }
+
+  function renderScholarship(lang){
+    const s = SCHOLARSHIPS.find(x => x.id === CURRENT_ID);
+    const loc = localized(s, lang);
+    document.getElementById("bcName").textContent = loc.name;
+    document.getElementById("sHeroName").textContent = loc.name;
+    document.getElementById("sFunding").textContent = loc.funding;
+    document.getElementById("sCountry").textContent = loc.country;
+    document.getElementById("sLevel").textContent = loc.levelLabel;
+    document.getElementById("sDeadline").textContent = loc.deadline;
+    document.getElementById("sSummary").textContent = loc.summary;
+    document.getElementById("factsList").innerHTML = li(loc.facts);
+    document.getElementById("eligibilityList").innerHTML = li(loc.eligibility);
+    document.getElementById("documentsList").innerHTML = li(loc.documents);
+    document.getElementById("tipsList").innerHTML = li(loc.tips);
+    document.getElementById("qfCountry").textContent = loc.country;
+    document.getElementById("qfLevel").textContent = loc.levelLabel;
+    document.getElementById("qfFunding").textContent = loc.funding;
+    document.getElementById("qfDeadline").textContent = loc.deadline;
+
+    const strings = PAGE_STRINGS[lang] || PAGE_STRINGS.en;
+    document.getElementById("matchP").textContent = strings.match_p_prefix + loc.name + strings.match_p_suffix;
+
+    const relatedRow = document.getElementById("relatedRow");
+    relatedRow.innerHTML = "";
+    RELATED_IDS.forEach(rid => {
+      const rs = SCHOLARSHIPS.find(x => x.id === rid);
+      if(!rs) return;
+      const rloc = localized(rs, lang);
+      const a = document.createElement("a");
+      a.className = "related-item";
+      a.href = "../" + rid + "/";
+      a.innerHTML = rloc.name + '<span>' + rloc.country + ' · ' + rloc.levelLabel + '</span>';
+      relatedRow.appendChild(a);
+    });
+
+    const saveBtn = document.getElementById("saveBtn");
+    const savedLabel = saveBtn.querySelector('span[data-i18n]') || saveBtn.querySelector('span');
+    if(RahApp.get() && RahApp.get().saved && RahApp.get().saved.includes(CURRENT_ID)){
+      savedLabel.textContent = strings.saved_btn;
+    } else {
+      savedLabel.textContent = strings.save_btn;
+    }
+  }
+
+  document.getElementById("saveBtn").addEventListener("click", function(e){
+    if(RahApp.get()){
+      e.preventDefault();
+      const on = RahApp.toggleSaved(CURRENT_ID);
+      const lang = RahI18n.getLang();
+      const strings = PAGE_STRINGS[lang] || PAGE_STRINGS.en;
+      const label = this.querySelector('span');
+      label.textContent = on ? strings.saved_btn : strings.save_btn;
+    }
+  });
+
+  RahI18n.init(PAGE_STRINGS, renderScholarship);
+</script>
+</body>
+</html>

@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rah — Scholarship Finder for Afghan Students</title>
+<meta name="description" content="Answer a short questionnaire and get a ranked list of scholarships based on your age, education level, English proficiency, and preferred countries.">
+<meta property="og:title" content="Rah — Scholarship Finder for Afghan Students">
+<meta property="og:description" content="Answer a short questionnaire and get scholarships matched to your profile.">
+<meta property="og:type" content="website">
+<link rel="canonical" href="https://rah.example.org/finder.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sand:#F6EEE0;
+    --sand-deep:#EDE0C8;
+    --ink:#2B241C;
+    --lapis:#1B4A72;
+    --lapis-deep:#123554;
+    --gold:#C08A2E;
+    --gold-soft:#E7C878;
+    --green:#3C6E52;
+    --teal:#2E6E7E;
+    --rust:#A25635;
+    --plum:#7A4C82;
+    --card:#FFFDF8;
+    --radius:18px;
+    --serif:'Fraunces', serif;
+    --sans:'Work Sans', sans-serif;
+    --arabic:'Noto Naskh Arabic', serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--sand);
+    background-image:
+      radial-gradient(circle at 8% 8%, rgba(27,74,114,0.06) 0, transparent 40%),
+      radial-gradient(circle at 92% 88%, rgba(192,138,46,0.09) 0, transparent 45%);
+    color: var(--ink);
+    font-family: var(--sans);
+    min-height:100vh;
+    line-height:1.5;
+  }
+  body.rtl{ direction: rtl; }
+  body.rtl .app-text{ font-family: var(--arabic); }
+
+  .app{
+    width:100%;
+    max-width:640px;
+    margin: 0 auto;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    padding: 28px 22px 60px;
+  }
+
+  /* ---- site-wide header/footer (wraps the quiz shell above) ---- */
+  .site-header{ position:sticky; top:0; z-index:50; background: rgba(246,238,224,0.92); backdrop-filter: blur(8px); border-bottom:1px solid var(--sand-deep); }
+  .site-nav-row{ max-width:1120px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; padding:16px 22px; }
+  .site-header .brand{ text-decoration:none; }
+  .site-header .brand-mark{ width:28px; height:28px; }
+  .site-header .brand-name{ font-size:19px; }
+  .site-nav-links{ display:flex; align-items:center; gap:6px; }
+  .site-nav-links a{ text-decoration:none; font-size:14.5px; font-weight:600; color: var(--ink); padding:9px 14px; border-radius:999px; transition: background 0.15s; }
+  .site-nav-links a:hover{ background: var(--sand-deep); }
+  .site-nav-cta{ display:inline-flex; align-items:center; gap:8px; background: var(--lapis); color:#fff !important; font-weight:600; font-size:14.5px; padding:10px 18px; border-radius:999px; text-decoration:none; }
+  .site-nav-cta:hover{ background: var(--lapis-deep); }
+  .site-nav-toggle{ display:none; background:none; border:none; cursor:pointer; padding:8px; }
+  @media (max-width: 860px){
+    .site-nav-links{ position:absolute; top:100%; left:0; right:0; background: var(--card); border-bottom:1px solid var(--sand-deep); flex-direction:column; align-items:stretch; gap:0; padding: 10px 20px 18px; display:none; }
+    .site-nav-links.open{ display:flex; }
+    .site-nav-links a{ padding:13px 6px; border-radius:0; border-bottom:1px solid var(--sand-deep); }
+    .site-nav-links .site-nav-cta{ margin-top:12px; justify-content:center; }
+    .site-nav-toggle{ display:block; }
+  }
+  .site-footer{ border-top:1px solid var(--sand-deep); padding: 26px 22px 34px; text-align:center; max-width:640px; margin:0 auto; }
+  .site-footer a{ color: var(--lapis); text-decoration:none; font-weight:600; font-size:13.5px; margin: 0 8px; }
+  .site-footer p{ font-size:12.5px; color:#9c8c73; margin: 12px 0 0; }
+
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom: 34px;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .brand-mark{ width:34px;height:34px;flex:0 0 auto; }
+  .brand-name{
+    font-family: var(--serif);
+    font-weight:600;
+    font-size:22px;
+    color: var(--lapis-deep);
+    letter-spacing:0.2px;
+  }
+  .lang-switch{
+    display:flex;
+    gap:4px;
+    background: var(--sand-deep);
+    border-radius: 999px;
+    padding:4px;
+  }
+  .lang-switch button{
+    border:none;
+    background:transparent;
+    padding:6px 12px;
+    font-family: var(--sans);
+    font-size:13px;
+    font-weight:600;
+    color: var(--ink);
+    opacity:0.55;
+    border-radius:999px;
+    cursor:pointer;
+    transition: background 0.2s, opacity 0.2s;
+  }
+  .lang-switch button.active{ background: var(--lapis); color: #fff; opacity:1; }
+
+  .progress-wrap{ display:flex; gap:6px; margin-bottom: 30px; }
+  .progress-seg{ flex:1; height:5px; border-radius:4px; background: var(--sand-deep); overflow:hidden; }
+  .progress-seg > span{ display:block; height:100%; width:0%; background: var(--gold); transition: width 0.4s ease; }
+
+  .screen{ display:none; flex:1; flex-direction:column; }
+  .screen.active{ display:flex; }
+
+  .intro-hero{ font-family: var(--serif); font-weight:600; font-size: 34px; line-height:1.18; color: var(--lapis-deep); margin: 6px 0 14px; }
+  .intro-sub{ font-size:16px; color: #55493a; max-width: 46ch; margin-bottom: 30px; }
+  .intro-points{ display:flex; flex-direction:column; gap:14px; margin-bottom:30px; }
+  .intro-point{ display:flex; gap:12px; align-items:flex-start; background: var(--card); border:1px solid var(--sand-deep); border-radius: var(--radius); padding:14px 16px; }
+  .intro-point svg{ flex:0 0 auto; margin-top:2px; }
+  .intro-point-text b{ display:block; font-size:14.5px; margin-bottom:2px; }
+  .intro-point-text span{ font-size:13.5px; color:#6b5d4a; }
+
+  .intro-actions{ display:flex; flex-direction:column; gap:12px; align-items:flex-start; }
+
+  .btn-primary{
+    background: var(--lapis); color:#fff; border:none; font-family: var(--sans); font-weight:600; font-size:16px;
+    padding: 15px 26px; border-radius: 14px; cursor:pointer; transition: background 0.2s, transform 0.15s;
+    box-shadow: 0 6px 16px rgba(27,74,114,0.22);
+  }
+  .btn-primary:hover{ background: var(--lapis-deep); }
+  .btn-primary:active{ transform: scale(0.98); }
+  .btn-secondary{
+    background:transparent; border:1.5px solid var(--sand-deep); color: var(--ink); font-family: var(--sans);
+    font-weight:600; font-size:15px; padding:13px 22px; border-radius:14px; cursor:pointer;
+  }
+  .btn-secondary:hover{ border-color: var(--lapis); }
+  .btn-link{
+    background:none; border:none; color: var(--lapis); font-family: var(--sans); font-weight:600; font-size:14.5px;
+    cursor:pointer; padding:6px 0; text-decoration: underline; text-underline-offset:3px;
+  }
+
+  .q-eyebrow{ font-size:13.5px; font-weight:600; color: var(--gold); margin-bottom:8px; }
+  .q-title{ font-family: var(--serif); font-weight:600; font-size:26px; color: var(--lapis-deep); margin: 0 0 26px; line-height:1.28; }
+  .options{ display:flex; flex-direction:column; gap:10px; margin-bottom: 30px; }
+  .option-btn{
+    text-align: left; background: var(--card); border:1.5px solid var(--sand-deep); border-radius: 14px;
+    padding: 15px 18px; font-family: var(--sans); font-size:15.5px; color: var(--ink); cursor:pointer;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  body.rtl .option-btn{ text-align:right; }
+  .option-btn:hover{ border-color: var(--gold-soft); background:#FFFBF2; }
+  .option-btn.selected{ border-color: var(--lapis); background: #EAF1F6; font-weight:600; }
+  .num-input{
+    width:100%; font-family: var(--sans); font-size:22px; padding:16px 18px; border-radius:14px;
+    border:1.5px solid var(--sand-deep); background: var(--card); margin-bottom:30px; color: var(--ink);
+  }
+  .num-input:focus{ outline:none; border-color: var(--lapis); }
+  .field-select{
+    width:100%; font-family:var(--sans); font-size:16px; padding:16px 18px; border-radius:14px;
+    border:1.5px solid var(--sand-deep); background:var(--card); color:var(--ink); margin-bottom:30px; cursor:pointer;
+  }
+  .field-select:focus{ outline:none; border-color:var(--lapis); }
+
+  .nav-row{ display:flex; justify-content:space-between; align-items:center; margin-top:auto; gap:12px; }
+
+  .results-head{ margin-bottom: 22px; }
+  .results-eyebrow{ font-size:13.5px; font-weight:600; color: var(--green); margin-bottom:6px; }
+  .results-title{ font-family: var(--serif); font-weight:600; font-size:28px; color: var(--lapis-deep); margin:0 0 8px; }
+  .results-sub{ font-size:14.5px; color:#6b5d4a; }
+  .scholarship-card{ background: var(--card); border:1px solid var(--sand-deep); border-radius: var(--radius); padding:20px; margin-bottom:16px; }
+  .scholarship-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; cursor:pointer; }
+  .scholarship-name{ font-family: var(--serif); font-weight:600; font-size:19px; color: var(--lapis-deep); margin:0 0 4px; }
+  .scholarship-meta{ font-size:13px; color:#8a7a63; display:flex; flex-wrap:wrap; gap:6px 10px; }
+  .match-badge{ flex:0 0 auto; background: var(--sand-deep); color: var(--lapis-deep); font-size:12px; font-weight:700; padding:5px 10px; border-radius:999px; white-space:nowrap; }
+  .match-badge.strong{ background: var(--green); color:#fff; }
+  .scholarship-desc{ font-size:14.5px; color: #4a3f30; margin: 12px 0 0; }
+  .chevron{ transition: transform 0.2s; flex: 0 0 auto; margin-top: 4px; }
+  .scholarship-card.open .chevron{ transform: rotate(180deg); }
+  .scholarship-details{ display:none; margin-top:16px; padding-top:16px; border-top:1px dashed var(--sand-deep); }
+  .scholarship-card.open .scholarship-details{ display:block; }
+  .detail-block{ margin-bottom:14px; }
+  .detail-block:last-child{ margin-bottom:0; }
+  .detail-label{ font-size:12.5px; font-weight:700; color: var(--gold); margin-bottom:6px; }
+  .detail-list{ margin:0; padding-inline-start: 18px; font-size:14px; color:#4a3f30; display:flex; flex-direction:column; gap:5px; }
+
+  .other-list{ margin-top: 8px; }
+  .other-item{ display:flex; justify-content:space-between; align-items:center; padding:12px 16px; background: var(--card); border:1px solid var(--sand-deep); border-radius:12px; margin-bottom:8px; font-size:14.5px; cursor:pointer; }
+  .other-item span.name{ font-weight:600; }
+
+  .footer-note{ text-align:center; font-size:12.5px; color:#9c8c73; margin-top:30px; line-height:1.6; }
+
+  /* Portfolio tips screen */
+  .tips-header{ margin-bottom:22px; }
+  .tips-eyebrow{ font-size:13.5px; font-weight:600; color: var(--rust); margin-bottom:6px; }
+  .tips-title{ font-family: var(--serif); font-weight:600; font-size:28px; color: var(--lapis-deep); margin:0 0 8px; }
+  .tips-sub{ font-size:14.5px; color:#6b5d4a; margin-bottom: 22px; }
+
+  .tab-scroll{
+    display:flex; gap:8px; overflow-x:auto; padding-bottom:6px; margin-bottom:22px;
+    scrollbar-width: none;
+  }
+  .tab-scroll::-webkit-scrollbar{ display:none; }
+  .tab-pill{
+    flex: 0 0 auto; display:flex; align-items:center; gap:8px; padding:10px 16px; border-radius:999px;
+    border:1.5px solid var(--sand-deep); background: var(--card); font-family: var(--sans); font-weight:600;
+    font-size:14px; color: var(--ink); cursor:pointer; white-space:nowrap; transition: all 0.2s;
+  }
+  .tab-pill .dot{ width:8px; height:8px; border-radius:50%; flex:0 0 auto; }
+  .tab-pill.active{ color:#fff; border-color: transparent; }
+
+  .tips-panel{
+    background: var(--card); border:1px solid var(--sand-deep); border-radius: var(--radius);
+    padding: 26px 24px; position:relative; overflow:hidden;
+  }
+  .tips-panel::before{
+    content:""; position:absolute; top:0; left:0; right:0; height:5px; background: var(--panel-accent, var(--lapis));
+  }
+  body.rtl .tips-panel::before{ left:0; right:0; }
+  .tips-panel-title{
+    font-family: var(--serif); font-weight:600; font-size:21px; margin: 4px 0 16px; color: var(--panel-accent, var(--lapis));
+  }
+  .tips-steps{ display:flex; flex-direction:column; gap:14px; }
+  .tips-step{ display:flex; gap:14px; align-items:flex-start; }
+  .tips-step-num{
+    flex:0 0 auto; width:28px; height:28px; border-radius:50%; background: var(--panel-accent, var(--lapis));
+    color:#fff; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700;
+    font-family: var(--sans);
+  }
+  .tips-step-text{ font-size:14.5px; color:#4a3f30; padding-top:4px; }
+
+  @media (max-width: 400px){
+    .intro-hero{ font-size:28px; }
+    .q-title{ font-size:22px; }
+    .tips-title{ font-size:24px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-nav-row">
+    <a class="brand" href="index.html" style="display:flex;align-items:center;gap:9px;">
+      <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 3L34 11V29L20 37L6 29V11L20 3Z" stroke="#1B4A72" stroke-width="2" fill="#EAF1F6"/>
+        <path d="M20 12L26 15.5V22.5L20 26L14 22.5V15.5L20 12Z" fill="#C08A2E"/>
+      </svg>
+      <span class="brand-name" style="font-family:var(--serif);font-weight:600;color:var(--lapis-deep);">Rah</span>
+    </a>
+    <button class="site-nav-toggle" id="siteNavToggle" aria-label="Open menu" aria-expanded="false">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M3 6H21M3 12H21M3 18H21" stroke="#2B241C" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <nav class="site-nav-links" id="siteNavLinks">
+      <a href="index.html" data-i18n="nav_home">Home</a>
+      <a href="scholarships.html" data-i18n="nav_scholarships">Scholarships</a>
+      <a href="profile.html" data-i18n="nav_profile">Build Your Profile</a>
+      <a href="guides.html" data-i18n="nav_guides">Guides</a>
+      <a class="site-nav-cta" href="login.html" data-i18n="nav_login">Login / Sign Up</a>
+    </nav>
+  </div>
+</header>
+
+<div class="app">
+
+  <div class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 3L34 11V29L20 37L6 29V11L20 3Z" stroke="#1B4A72" stroke-width="2" fill="#EAF1F6"/>
+        <path d="M20 12L26 15.5V22.5L20 26L14 22.5V15.5L20 12Z" fill="#C08A2E"/>
+      </svg>
+      <span class="brand-name app-text" id="brandName">Rah</span>
+    </div>
+    <div class="lang-switch">
+      <button data-lang="en" class="active">EN</button>
+      <button data-lang="prs">دری</button>
+      <button data-lang="pus">پښتو</button>
+    </div>
+  </div>
+
+  <div class="progress-wrap" id="progressWrap"></div>
+
+  <!-- INTRO -->
+  <div class="screen active app-text" id="screen-intro">
+    <h1 class="intro-hero" id="introHero"></h1>
+    <p class="intro-sub" id="introSub"></p>
+    <div class="intro-points" id="introPoints"></div>
+    <div class="intro-actions">
+      <button class="btn-primary" id="startBtn"></button>
+      <button class="btn-link" id="tipsLinkIntro"></button>
+    </div>
+  </div>
+
+  <!-- QUESTIONS -->
+  <div class="screen app-text" id="screen-question">
+    <div class="q-eyebrow" id="qEyebrow"></div>
+    <div class="q-title" id="qTitle"></div>
+    <div id="qBody"></div>
+    <div class="nav-row">
+      <button class="btn-secondary" id="backBtn"></button>
+      <button class="btn-primary" id="nextBtn"></button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="screen app-text" id="screen-results">
+    <div class="results-head">
+      <div class="results-eyebrow" id="resultsEyebrow"></div>
+      <h2 class="results-title" id="resultsTitle"></h2>
+      <p class="results-sub" id="resultsSub"></p>
+    </div>
+    <div id="resultsList"></div>
+    <div id="otherWrap" style="margin-top:26px;">
+      <div class="detail-label" id="otherLabel"></div>
+      <div class="other-list" id="otherList"></div>
+    </div>
+    <button class="btn-link" id="tipsLinkResults" style="margin-top:22px; align-self:flex-start;"></button>
+    <button class="btn-secondary" id="restartBtn" style="margin-top:14px; align-self:flex-start;"></button>
+    <p class="footer-note" id="footerNote"></p>
+  </div>
+
+  <!-- PORTFOLIO TIPS -->
+  <div class="screen app-text" id="screen-tips">
+    <div class="tips-header">
+      <div class="tips-eyebrow" id="tipsEyebrow"></div>
+      <h2 class="tips-title" id="tipsTitle"></h2>
+      <p class="tips-sub" id="tipsSub"></p>
+    </div>
+    <div class="tab-scroll" id="tabScroll"></div>
+    <div class="tips-panel" id="tipsPanel">
+      <h3 class="tips-panel-title" id="tipsPanelTitle"></h3>
+      <div class="tips-steps" id="tipsSteps"></div>
+    </div>
+    <button class="btn-secondary" id="tipsBackBtn" style="margin-top:26px; align-self:flex-start;"></button>
+  </div>
+
+</div>
+
+<footer class="site-footer">
+  <div>
+    <a href="index.html">Home</a>
+    <a href="scholarships.html">Browse Scholarships</a>
+    <a href="guides.html">Guides</a>
+    <a href="profile.html">Build Your Profile</a>
+  </div>
+  <p>© 2026 Rah. Always confirm exact deadlines and requirements on each scholarship's official page.</p>
+</footer>
+
+<script>
+  document.getElementById("siteNavToggle").addEventListener("click", function(){
+    var links = document.getElementById("siteNavLinks");
+    var open = links.classList.toggle("open");
+    this.setAttribute("aria-expanded", open ? "true" : "false");
+  });
+</script>
+<script src="js/app.js"></script>
+<script>
+/* ============== UI TRANSLATIONS ============== */
+const T = {
+  en: {
+    brand: "Rah",
+    introHero: "Find scholarships built for your path",
+    introSub: "Answer a few short questions about yourself, and Rah will match you with scholarships that Afghan students are actually eligible for — with real eligibility rules and tips to strengthen your application.",
+    points: [
+      { t: "Built for Afghan students", d: "Every scholarship here is either open to Afghan applicants or specifically designed for them." },
+      { t: "Real eligibility, not guesswork", d: "Matches are based on your age, education level, field, and English level." },
+      { t: "Application tips included", d: "See what actually improves your chances for each scholarship." }
+    ],
+    start: "Start",
+    tipsLink: "Not ready for the quiz? See portfolio-building tips instead →",
+    back: "Back",
+    next: "Next",
+    seeResults: "See my results",
+    q1Eyebrow: "Question 1 of 5", q1Title: "How old are you?", q1Placeholder: "Enter your age",
+    q2Eyebrow: "Question 2 of 5", q2Title: "Which country would you most like to study in?",
+    q2Options: ["United States", "United Kingdom", "Russia", "Germany", "Japan", "Rwanda / Africa", "No strong preference — anywhere is fine"],
+    q3Eyebrow: "Question 3 of 5", q3Title: "What's your current education level?",
+    q3Options: ["Currently in secondary/high school", "Finished high school, no bachelor's yet", "Have a bachelor's degree", "Have a master's degree or higher"],
+    q4Eyebrow: "Question 4 of 5", q4Title: "What field do you want to study or work in?",
+    q4Options: ["Any field / not sure yet", "Computer Science", "Software Engineering", "Electrical Engineering", "Mechanical Engineering", "Civil Engineering", "Medicine", "Public Health", "Economics", "Business Administration", "Law", "Education", "International Relations", "Agriculture", "Environmental Science", "Architecture", "Data Science", "Arts, Design, or Media"],
+    q5Eyebrow: "Question 5 of 5", q5Title: "How confident are you in English?",
+    q5Options: ["I have little to no English", "I understand basic English", "I'm intermediate — I can hold conversations", "I'm fluent or have taken an English-taught program"],
+    resultsEyebrow: "Your matches",
+    resultsTitle: "Here's what fits you best",
+    resultsSub: "Ranked by how closely they match your answers. Tap a card to see full eligibility and tips.",
+    otherLabel: "Other scholarships worth a look",
+    strongMatch: "Strong match", goodMatch: "Good match", possibleMatch: "Worth checking",
+    eligibility: "Who it's for", tips: "What improves your chances", facts: "Key facts",
+    restart: "Start over",
+    footer: "This tool gives general guidance based on public scholarship information. Always confirm exact deadlines and requirements on the scholarship's official page before applying.",
+    countryLabel: "Country",
+    tipsFromResults: "Want to build a stronger application? See portfolio-building tips →",
+    tipsEyebrow: "Before you apply",
+    tipsTitle: "Build a portfolio that stands out",
+    tipsSub: "Pick the field closest to your goals — these are concrete, doable steps, not just advice.",
+    tipsBack: "Back",
+    tabs: {
+      general: "General", tech: "Technology", medicine: "Medicine", business: "Business & Law", social: "Social Sciences", arts: "Arts & Media"
+    }
+  },
+  prs: {
+    brand: "راه",
+    introHero: "بورس تحصیلی مناسب راه خود را پیدا کنید",
+    introSub: "به چند سوال کوتاه در مورد خودتان جواب دهید، و راه بورس‌های تحصیلی را که محصلان افغان واقعاً واجد شرایط آن هستند به شما نشان می‌دهد — همراه با شرایط واقعی و نکاتی برای تقویت درخواست شما.",
+    points: [
+      { t: "ساخته شده برای محصلان افغان", d: "هر بورسی که اینجا است یا برای افغان‌ها باز است یا مخصوص آنها طراحی شده." },
+      { t: "شرایط واقعی، نه حدس و گمان", d: "تطابق بر اساس سن، سطح تحصیل، رشته، و سطح انگلیسی شما است." },
+      { t: "شامل نکات درخواست‌دهی", d: "ببینید چه چیزی واقعاً شانس شما را برای هر بورس بیشتر می‌کند." }
+    ],
+    start: "شروع",
+    tipsLink: "برای کوییز آماده نیستید؟ در عوض نکات ساخت پورتفولیو را ببینید ←",
+    back: "برگشت", next: "بعدی", seeResults: "دیدن نتایج من",
+    q1Eyebrow: "سوال ۱ از ۵", q1Title: "سن شما چند است؟", q1Placeholder: "سن خود را وارد کنید",
+    q2Eyebrow: "سوال ۲ از ۵", q2Title: "دوست دارید در کدام کشور درس بخوانید؟",
+    q2Options: ["ایالات متحده امریکا", "بریتانیا", "روسیه", "آلمان", "جاپان", "روآندا / افریقا", "ترجیح خاصی ندارم — هر جا خوب است"],
+    q3Eyebrow: "سوال ۳ از ۵", q3Title: "سطح تحصیلی فعلی شما چیست؟",
+    q3Options: ["در حال حاضر در مکتب/لیسه هستم", "لیسه را تمام کرده‌ام، هنوز لیسانس ندارم", "لیسانس دارم", "ماستری یا بالاتر دارم"],
+    q4Eyebrow: "سوال ۴ از ۵", q4Title: "می‌خواهید در کدام رشته تحصیل یا کار کنید؟",
+    q4Options: ["هر رشته / هنوز مطمئن نیستم", "کمپیوتر ساینس", "انجینیری نرم‌افزار", "انجینیری برق", "انجینیری میخانیک", "انجینیری سیول", "طب", "صحت عامه", "اقتصاد", "مدیریت کاروبار", "حقوق", "تعلیم و تربیه", "روابط بین‌الملل", "زراعت", "علوم محیط زیست", "معماری", "دیتا ساینس", "هنر، دیزاین، یا رسانه"],
+    q5Eyebrow: "سوال ۵ از ۵", q5Title: "سطح اعتماد شما به زبان انگلیسی چقدر است؟",
+    q5Options: ["انگلیسی کم یا هیچ بلد نیستم", "انگلیسی ابتدایی می‌فهمم", "متوسط هستم — می‌توانم صحبت کنم", "روان هستم یا در برنامه انگلیسی درس خوانده‌ام"],
+    resultsEyebrow: "تطابق‌های شما",
+    resultsTitle: "این‌ها بهترین گزینه‌ها برای شما هستند",
+    resultsSub: "بر اساس نزدیکی به جواب‌های شما درجه‌بندی شده. روی هر کارت کلیک کنید تا شرایط کامل و نکات را ببینید.",
+    otherLabel: "بورس‌های دیگری که ارزش دیدن دارند",
+    strongMatch: "تطابق قوی", goodMatch: "تطابق خوب", possibleMatch: "ارزش بررسی دارد",
+    eligibility: "برای چه کسانی است", tips: "چه چیزی شانس شما را بیشتر می‌کند", facts: "معلومات کلیدی",
+    restart: "از نو شروع کنید",
+    footer: "این ابزار راهنمایی عمومی بر اساس معلومات عامه بورس‌های تحصیلی ارائه می‌دهد. لطفاً پیش از درخواست، حتماً ضرب‌الاجل‌ها و شرایط دقیق را در صفحه رسمی بورس بررسی کنید.",
+    countryLabel: "کشور",
+    tipsFromResults: "می‌خواهید درخواست قوی‌تری بسازید؟ نکات ساخت پورتفولیو را ببینید ←",
+    tipsEyebrow: "پیش از درخواست دادن",
+    tipsTitle: "پورتفولیویی بسازید که برجسته باشد",
+    tipsSub: "رشته‌ای را که به اهداف شما نزدیک‌تر است انتخاب کنید — این‌ها گام‌های مشخص و عملی هستند، نه فقط مشوره.",
+    tipsBack: "برگشت",
+    tabs: { general: "عمومی", tech: "تکنالوژی", medicine: "طب", business: "بزنس و حقوق", social: "علوم اجتماعی", arts: "هنر و رسانه" }
+  },
+  pus: {
+    brand: "لاره",
+    introHero: "خپل لپاره مناسب بورسیه ومومئ",
+    introSub: "د ځان په اړه څو لنډو پوښتنو ته ځواب ورکړئ، لاره به تاسو له هغو بورسیو سره سمون ورکړي چې افغان زده‌کوونکي واقعیا ورته وړ دي — د اصلي شرایطو او د غوښتنلیک د غوره کولو نکتو سره.",
+    points: [
+      { t: "د افغان زده‌کوونکو لپاره جوړ شوی", d: "دلته هره بورسیه یا افغانانو ته پرانیستې ده یا مشخصا د دوی لپاره جوړه شوې." },
+      { t: "واقعي شرایط، نه ګمان", d: "سمون ستاسو د عمر، د زده‌کړې کچې، ډګر، او د انګلیسي کچې پر بنسټ دی." },
+      { t: "د غوښتنلیک نکتې شاملې دي", d: "وګورئ چې د هرې بورسیې لپاره ستاسو فرصتونه واقعیا څه شی زیاتوي." }
+    ],
+    start: "پیل",
+    tipsLink: "د کوییز لپاره چمتو نه یاست؟ پرځای یې د پورتفولیو جوړولو نکتې وګورئ ←",
+    back: "شاته", next: "بل", seeResults: "زما پایلې وګورئ",
+    q1Eyebrow: "پوښتنه ۱ له ۵", q1Title: "ستاسو عمر څو کاله دی؟", q1Placeholder: "خپل عمر ولیکئ",
+    q2Eyebrow: "پوښتنه ۲ له ۵", q2Title: "تاسو غواړئ په کوم هیواد کې زده‌کړه وکړئ؟",
+    q2Options: ["امریکا", "بریتانیا", "روسیه", "جرمني", "جاپان", "روانډا / افریقا", "ځانګړی غوره والی نلرم — هر ځای ښه دی"],
+    q3Eyebrow: "پوښتنه ۳ له ۵", q3Title: "ستاسو اوسنۍ زده‌کړیزه کچه څه ده؟",
+    q3Options: ["اوس مهال په لیسه/مکتب کې یم", "لیسه مې پای ته رسولې، لسانس مې نلري", "لیسانس لرم", "ماسترۍ یا لوړه کچه لرم"],
+    q4Eyebrow: "پوښتنه ۴ له ۵", q4Title: "غواړئ په کوم ډګر کې زده‌کړه یا کار وکړئ؟",
+    q4Options: ["هر ډګر / تر اوسه ډاډه نه یم", "کمپیوټر ساینس", "د سافټویر انجینري", "برقي انجینري", "میخانیکي انجینري", "ملکي انجینري", "طب", "عامه روغتیا", "اقتصاد", "د سوداګرۍ اداره", "حقوق", "زده‌کړه", "نړیوالې اړیکې", "کرنه", "چاپېریالي علوم", "معماري", "ډاټا ساینس", "هنر، ډیزاین، یا رسنۍ"],
+    q5Eyebrow: "پوښتنه ۵ له ۵", q5Title: "په انګلیسي ژبه کې د ځان باور څومره لرئ؟",
+    q5Options: ["ما ته لږ یا هیڅ انګلیسي نه راځي", "زه بنسټیزه انګلیسي پوهیږم", "منځنی یم — خبرې کولی شم", "روان یم یا د انګلیسي ژبې په یوه پروګرام کې زده‌کړه کړې مې ده"],
+    resultsEyebrow: "ستاسو سمونونه",
+    resultsTitle: "دا هغه دي چې ستاسو سره غوره برابرېږي",
+    resultsSub: "د ستاسو ځوابونو سره د نږدیوالي پر بنسټ درجه‌بندي شوي. د بشپړو شرایطو او نکتو لیدو لپاره پر کارت کلیک وکړئ.",
+    otherLabel: "نورې بورسیې چې ارزښت لري وګورئ",
+    strongMatch: "قوي سمون", goodMatch: "ښه سمون", possibleMatch: "د کتلو ارزښت لري",
+    eligibility: "دا د چا لپاره ده", tips: "څه شی ستاسو فرصتونه زیاتوي", facts: "کلیدي معلومات",
+    restart: "له سره پیل کړئ",
+    footer: "دا وسیله د بورسیو د عامه معلوماتو پر بنسټ عمومي لارښوونه وړاندې کوي. مهرباني وکړئ د غوښتنلیک ورکولو دمخه رسمي پاڼه کې دقیق نیټې او شرایط تایید کړئ.",
+    countryLabel: "هیواد",
+    tipsFromResults: "غواړئ خپل غوښتنلیک پیاوړی جوړ کړئ؟ د پورتفولیو جوړولو نکتې وګورئ ←",
+    tipsEyebrow: "د غوښتنلیک دمخه",
+    tipsTitle: "داسې پورتفولیو جوړ کړئ چې مخکې راښکاره شي",
+    tipsSub: "هغه ډګر غوره کړئ چې ستاسو موخو ته نږدې دی — دا مشخصې، شونې ګامونه دي، نه یوازې مشوره.",
+    tipsBack: "شاته",
+    tabs: { general: "عمومي", tech: "ټکنالوژي", medicine: "طب", business: "سوداګري او حقوق", social: "ټولنیز علوم", arts: "هنر او رسنۍ" }
+  }
+};
+
+/* ============== SCHOLARSHIP MATCHING METADATA ============== */
+const SCHOLARSHIPS = [
+  { id:"uwc", levels:["secondary"], ageMin:15, ageMax:17, englishMin:2, countryIdx:[0,1,4,5,6] },
+  { id:"opendoors", levels:["undergrad","masters","phd"], ageMin:17, ageMax:45, englishMin:1, countryIdx:[2] },
+  { id:"dafi", levels:["undergrad"], ageMin:18, ageMax:28, englishMin:0, countryIdx:"any" },
+  { id:"fulbright", levels:["masters","phd"], ageMin:20, ageMax:45, englishMin:3, countryIdx:[0] },
+  { id:"sola", levels:["secondary"], ageMin:13, ageMax:18, englishMin:0, countryIdx:[5] },
+  { id:"mext", levels:["masters","phd"], ageMin:21, ageMax:34, englishMin:2, countryIdx:[4] },
+  { id:"chevening", levels:["masters"], ageMin:23, ageMax:45, englishMin:3, countryIdx:[1] },
+  { id:"daad", levels:["undergrad","masters","phd"], ageMin:18, ageMax:40, englishMin:2, countryIdx:[3] },
+  { id:"erasmus-mundus", levels:["masters"], ageMin:18, ageMax:45, englishMin:3, countryIdx:[6] },
+  { id:"turkiye", levels:["undergrad","masters","phd"], ageMin:17, ageMax:34, englishMin:1, countryIdx:[6] },
+  { id:"isdb", levels:["undergrad","masters","phd"], ageMin:17, ageMax:45, englishMin:1, countryIdx:[6] },
+  { id:"stipendium-hungaricum", levels:["undergrad","masters","phd"], ageMin:17, ageMax:45, englishMin:2, countryIdx:[6] }
+];
+
+/* ============== SCHOLARSHIP CONTENT (trilingual) ============== */
+const SCHOLARSHIP_CONTENT = {
+en: {
+  uwc: { name:"UWC (United World Colleges) — Afghanistan National Committee", country:"Various (16+ countries)",
+    summary:"A fully funded two-year international high school program (IB Diploma) at UWC campuses worldwide, run through a dedicated Afghanistan National Committee.",
+    facts:["Fully funded: tuition, room & board, and travel support","Two-year International Baccalaureate Diploma Programme","Applications open yearly, deadline typically late October","70% of UWC students receive full or partial financial aid"],
+    eligibility:["Afghan citizen, aged 15–17 at time of application","Currently enrolled in or have completed middle/high school (including non-traditional paths like online or community-based learning)","Living in Afghanistan or a neighboring country (Pakistan, Iran, Tajikistan, Uzbekistan, Turkmenistan), or as a refugee elsewhere","Valid Tazkira and, ideally, a valid Afghan passport"],
+    tips:["Show intellectual curiosity beyond grades — clubs, self-study, community projects all count","Female applicants and those who studied through alternative means are specifically encouraged","Write genuinely about your values and community involvement, not just achievements","Apply well before the October 31 deadline — the process is fully online now"] },
+  opendoors:{ name:"Open Doors — Russian Government Scholarship", country:"Russia",
+    summary:"A Russian government-backed Olympiad-style competition offering fully funded bachelor's, master's, PhD, and postdoctoral study at top Russian universities, open to applicants worldwide.",
+    facts:["Full tuition waiver plus a government stipend","Free preparatory Russian-language course if needed","Selection via an online Olympiad (portfolio, test, and interview stages)","Thousands of Afghan students already study in Russia through similar programs"],
+    eligibility:["Any nationality, including Afghan citizens, is eligible","Bachelor's track: completed high school","Master's track: hold a bachelor's or specialist degree","PhD track: hold a master's or specialist degree","Proficiency in English or Russian (Russian courses provided if needed)"],
+    tips:["Build a strong portfolio early — academic records, certificates, and achievements are scored by a jury","Practice the entrance test format in advance; you get a limited number of attempts","If applying without Russian, double check which universities and programs offer English-taught tracks","Register as early as the application window opens — it happens in stages over several months"] },
+  dafi:{ name:"DAFI Tertiary Scholarship (UNHCR)", country:"Country of asylum or home country",
+    summary:"A UNHCR-run scholarship specifically for refugees, including many Afghan refugees, to complete an undergraduate degree in their country of asylum or home country.",
+    facts:["Covers tuition, and often living costs and materials","Specifically for refugees and, in some countries, returnees","Study happens in the country of asylum (e.g. Iran, Pakistan, Tajikistan, Kazakhstan) rather than a Western country","Thousands of Afghan students have completed degrees through DAFI"],
+    eligibility:["Must be a recognized refugee (registered with UNHCR) or, in some countries, a returnee","Completed secondary school with good grades","Intending to pursue a bachelor's degree","Availability depends on which country you are currently living in — check your local UNHCR office"],
+    tips:["Register with your local UNHCR office first — this is usually a prerequisite","Ask about DAFI specifically when you register; it is not always advertised widely","Keep your school transcripts and refugee documentation organized and translated if needed","Apply as soon as the local call opens — spots and funding are limited each year"] },
+  fulbright:{ name:"Fulbright Foreign Student Program", country:"United States",
+    summary:"A fully funded US government program for master's and PhD study, covering tuition, living stipend, airfare, and health insurance, with a strong focus on future leadership.",
+    facts:["Fully funded: tuition, stipend, airfare, and insurance","Master's and PhD only — no undergraduate track","Very competitive; strong academic and leadership record expected","Administered through the US Embassy or partner organizations in your region"],
+    eligibility:["Hold a bachelor's degree (for master's track) or relevant graduate work (for PhD track)","Strong English proficiency — usually demonstrated via TOEFL or IELTS","Clear plan to return and contribute to your home community after the program","No formal age limit, but most awardees are early-to-mid career"],
+    tips:["Start your statement of purpose early — it should show leadership and a plan to give back","Take an English proficiency test (TOEFL/IELTS) well ahead of the deadline","Get strong academic and professional references who know your work well","Be specific about why a US graduate program (not just 'studying abroad' generally) fits your goals"] },
+  sola:{ name:"SOLA (School of Leadership Afghanistan)", country:"Rwanda",
+    summary:"A fully funded boarding school specifically for Afghan girls, relocated to Rwanda, offering a safe, supportive environment for secondary education.",
+    facts:["Fully funded boarding school experience","For Afghan girls specifically","English support provided as part of the program","Small, close-knit community focused on leadership development"],
+    eligibility:["Afghan girl of secondary school age","Strong motivation to learn, even without prior strong English","Willingness to relocate and board in Rwanda","Admissions typically open on a yearly cycle — check SOLA's site for current openings"],
+    tips:["Emphasize resilience and motivation in your application, not just grades","Reach out early — the program has limited spots and works directly with families","Highlight any leadership experience, even informal (helping in your community, mentoring siblings, etc.)"] },
+  mext:{ name:"MEXT Scholarship (Japan)", country:"Japan",
+    summary:"A Japanese government scholarship covering master's and PhD study, with monthly stipend, tuition waiver, and often a Japanese-language preparation period.",
+    facts:["Full tuition waiver plus monthly living stipend","Round-trip airfare typically included","Some programs taught in English, others require Japanese","Application usually goes through your local Japanese embassy"],
+    eligibility:["Hold or be completing a bachelor's degree (for master's) or master's degree (for PhD)","Generally under 35 years old at time of application","English or Japanese proficiency depending on the specific program","Apply through the Japanese Embassy in your country of residence"],
+    tips:["Check whether your target program is English-taught or requires Japanese from day one","Contact the embassy education section directly — timelines can shift year to year","A clear research proposal matters a lot for the graduate track — start drafting early","Being open to a preparatory Japanese-language year can widen your options"] },
+  chevening:{ name:"Chevening Scholarship", country:"United Kingdom",
+    summary:"A UK government scholarship for one-year master's programs, aimed at emerging leaders, covering tuition, living costs, and travel.",
+    facts:["Fully funded one-year master's degree in the UK","Requires at least two years of work experience","Strong emphasis on leadership and future impact","Highly competitive — thousands of applicants annually"],
+    eligibility:["At least two years of relevant work experience","Strong English proficiency (IELTS or equivalent usually required)","A clear leadership story and plan to use the degree to create impact back home","Must return to your home country for at least two years after the award"],
+    tips:["Work experience is non-negotiable — build it before applying if you're still a student","Your essays matter more than your CV — practice telling a clear leadership story","Apply to three different UK master's courses as required, and make sure they're realistic fits","Take an English test early since scores can take weeks to arrange and receive"] },
+  daad:{ name:"DAAD Scholarships (Germany)", country:"Germany",
+    summary:"A large German government-funded program with dozens of scholarship tracks across bachelor's, master's, and PhD levels, especially strong in engineering and technical fields.",
+    facts:["Many tracks: development-related master's, research grants, PhD sandwich programs, and more","Covers tuition, stipend, and often health insurance","Programs available in English and German","Especially strong for engineering, sciences, and development-related fields"],
+    eligibility:["Requirements vary by track — check the specific DAAD program you're applying to","Generally need a completed degree at the level below the one you're applying for","English or German proficiency depending on the program's teaching language","Some IELTS/TOEFL requirements can be waived if your prior degree was taught in English"],
+    tips:["Browse DAAD's database by field — there are often more relevant tracks than people realize","If your bachelor's was taught in English, get a letter from your university confirming this — it can waive language test requirements","Reach out to potential supervisors early for research-based tracks","Tailor your motivation letter to the specific track, not a generic 'study in Germany' pitch"] },
+  "erasmus-mundus":{ name:"Erasmus Mundus Joint Masters", country:"Europe and partner countries",
+    summary:"Fully funded joint master's degrees taught across multiple universities in Europe, awarded to top applicants worldwide through a competitive consortium selection.",
+    facts:["Full scholarship covers tuition, travel, visa costs, and a monthly living allowance","Study takes place at two or more universities across different countries","Programs typically last one to two academic years","Deadlines vary by program, usually between October and January"],
+    eligibility:["Hold a bachelor's degree or equivalent","Meet the specific program's academic and language requirements","Open to applicants of any nationality, including Afghan students"],
+    tips:["Apply directly through the specific joint program's consortium website, not a general portal","Programs vary widely — read the exact requirements for the one you want","Tailor your motivation letter to the specific joint program, not just 'studying in Europe'"] },
+  turkiye:{ name:"Türkiye Scholarships", country:"Türkiye",
+    summary:"A Turkish government scholarship open to international students at bachelor's, master's, and PhD levels, including university placement and a preparatory Turkish-language year.",
+    facts:["Fully funded: tuition, monthly stipend, accommodation, health insurance, and flights","Includes a Turkish-language preparation course before your program starts","Open to undergraduate, master's, and PhD applicants","Selection is based on academic merit and your full application"],
+    eligibility:["Open to applicants of any nationality, including Afghan students","Minimum grade and age requirements vary by degree level","Currently enrolled students at a Turkish university at the same level are not eligible"],
+    tips:["Apply only through the official Türkiye Scholarships portal — the application is free","Be specific about your intended field and how it connects to your goals","Check the yearly calendar carefully, as it can shift from year to year"] },
+  isdb:{ name:"Islamic Development Bank (IsDB) Scholarships", country:"Partner universities in member countries",
+    summary:"Development-focused scholarships for students from IsDB member countries, including Afghanistan, spanning undergraduate to PhD level with an emphasis on science and technology.",
+    facts:["Tracks available from undergraduate through PhD","Master's-level tracks often focus on science, technology, engineering, and medical fields","Benefits and eligibility vary by specific track"],
+    eligibility:["Afghan citizens are eligible, since Afghanistan is an IsDB member country","Meet the academic and field requirements of the specific track","Priority is often given to fields connected to national development needs"],
+    tips:["Choose a field of study you can clearly connect to a development need in your community","Read the current year's official program booklet — details change annually","Prepare a clear, specific plan for how you'll use your degree afterward"] },
+  "stipendium-hungaricum":{ name:"Stipendium Hungaricum", country:"Hungary",
+    summary:"A Hungarian government scholarship for international students, offered through country-specific partnership arrangements, covering undergraduate through PhD study.",
+    facts:["Available fields and degree levels depend on the current year's call for Afghanistan","Many applicants need to be nominated through a sending-partner arrangement","The application portal lists citizenship-specific requirements"],
+    eligibility:["Availability for Afghan applicants depends on the current year's partnership agreement","Meet the university's academic and language entry requirements","Follow the official nomination process required for your country"],
+    tips:["Confirm whether Afghanistan has an active call before investing time in this application","Don't rely on outdated posts — check the official portal directly","Apply through the correct nominating body for your situation"] }
+},
+prs: {
+  uwc:{ name:"یو‌دبلیو‌سی (کالج‌های متحد جهانی) — کمیته ملی افغانستان", country:"کشورهای مختلف (بیشتر از ۱۶ کشور)",
+    summary:"یک برنامه دو ساله تحصیلات متوسطه بین‌المللی (دیپلوم آی‌بی) با تمویل کامل در کمپس‌های یو‌دبلیو‌سی در سراسر جهان، از طریق یک کمیته ملی مخصوص افغانستان.",
+    facts:["تمویل کامل: شامل فیس تحصیلی، خوراک و اقامت، و کمک هزینه سفر","برنامه دو ساله دیپلوم بین‌المللی بکلوریا (IB)","درخواست‌ها هر سال باز می‌شود، ضرب‌الاجل معمولاً اواخر اکتوبر است","۷۰٪ محصلان یو‌دبلیو‌سی کمک مالی کامل یا جزئی دریافت می‌کنند"],
+    eligibility:["تبعه افغانستان، سن ۱۵ تا ۱۷ سال در زمان درخواست","در حال حاضر در مکتب متوسطه یا لیسه باشد یا آن را تمام کرده باشد (شامل راه‌های غیر رسمی مانند آموزش آنلاین یا اجتماعی)","ساکن افغانستان یا یکی از کشورهای همسایه (پاکستان، ایران، تاجکستان، ازبکستان، ترکمنستان)، یا به عنوان مهاجر در جای دیگر","تذکره معتبر و ترجیحاً پاسپورت معتبر افغانی"],
+    tips:["کنجکاوی فکری خود را فراتر از نمرات نشان دهید — کلوپ‌ها، خودآموزی، و پروژه‌های اجتماعی همه اهمیت دارند","محصلان دختر و کسانی که از راه‌های غیر رسمی درس خوانده‌اند به طور خاص تشویق می‌شوند","در مورد ارزش‌ها و مشارکت اجتماعی خود صادقانه بنویسید، نه فقط دستاوردها","پیش از ضرب‌الاجل ۳۱ اکتوبر درخواست دهید — روند اکنون کاملاً آنلاین است"] },
+  opendoors:{ name:"اوپن دورز — بورس دولت روسیه", country:"روسیه",
+    summary:"یک مسابقه المپیاد آنلاین با حمایت دولت روسیه که تحصیلات کاملاً تمویل شده در سطح لیسانس، ماستری، دوکتورا، و پسا-دوکتورا را در دانشگاه‌های برتر روسیه به متقاضیان از سراسر جهان ارائه می‌دهد.",
+    facts:["معافیت کامل از فیس تحصیلی به همراه کمک هزینه دولتی","دوره رایگان آماده‌سازی زبان روسی در صورت نیاز","انتخاب از طریق مراحل المپیاد آنلاین (پورتفولیو، آزمون، و مصاحبه)","هزاران محصل افغان از قبل از طریق برنامه‌های مشابه در روسیه درس می‌خوانند"],
+    eligibility:["هر ملیتی، از جمله اتباع افغانستان، واجد شرایط است","مسیر لیسانس: تکمیل مکتب متوسطه","مسیر ماستری: داشتن سند لیسانس یا معادل آن","مسیر دوکتورا: داشتن سند ماستری یا معادل آن","تسلط به انگلیسی یا روسی (در صورت نیاز، کورس‌های روسی ارائه می‌شود)"],
+    tips:["از همان ابتدا یک پورتفولیو قوی بسازید — سوابق تحصیلی، گواهینامه‌ها، و دستاوردها توسط هیئت داوران نمره‌گذاری می‌شوند","از پیش فرمت آزمون ورودی را تمرین کنید؛ تعداد تلاش‌های شما محدود است","اگر بدون زبان روسی درخواست می‌دهید، بررسی کنید کدام دانشگاه‌ها و برنامه‌ها به انگلیسی تدریس می‌شوند","به محض باز شدن دوره درخواست، ثبت‌نام کنید — این روند در چند مرحله طی چند ماه انجام می‌شود"] },
+  dafi:{ name:"بورس تحصیلات عالی دافی (کمیشنری عالی ملل متحد در امور پناهندگان)", country:"کشور پناهندگی یا کشور اصلی",
+    summary:"یک بورس تحت نظر کمیشنری عالی ملل متحد در امور پناهندگان (UNHCR)، به طور خاص برای پناهندگان — از جمله بسیاری از پناهندگان افغان — برای تکمیل درجه لیسانس در کشور پناهندگی یا کشور اصلی خود.",
+    facts:["شامل فیس تحصیلی و اغلب هزینه‌های زندگی و مواد درسی","به طور خاص برای پناهندگان و، در برخی کشورها، بازگشت‌کنندگان","تحصیل در کشور پناهندگی (مانند ایران، پاکستان، تاجکستان، قزاقستان) انجام می‌شود، نه یک کشور غربی","هزاران محصل افغان از طریق دافی درجه تحصیلی خود را تکمیل کرده‌اند"],
+    eligibility:["باید پناهنده ثبت شده نزد UNHCR باشد یا، در برخی کشورها، بازگشت‌کننده","تکمیل مکتب متوسطه با نمرات خوب","قصد ادامه تحصیل در سطح لیسانس","دسترسی بستگی به کشوری دارد که در حال حاضر در آن زندگی می‌کنید — با دفتر محلی UNHCR تماس بگیرید"],
+    tips:["ابتدا نزد دفتر محلی UNHCR ثبت‌نام کنید — این معمولاً یک پیش‌شرط است","هنگام ثبت‌نام به طور مشخص در مورد دافی سوال کنید؛ همیشه به طور گسترده تبلیغ نمی‌شود","اسناد مکتب و مدارک پناهندگی خود را منظم نگه دارید و در صورت نیاز ترجمه کنید","به محض باز شدن فراخوان محلی درخواست دهید — بودجه و کرسی‌ها هر سال محدود است"] },
+  fulbright:{ name:"برنامه فلبرایت برای محصلان خارجی", country:"ایالات متحده امریکا",
+    summary:"یک برنامه کاملاً تمویل شده دولت امریکا برای تحصیل در سطح ماستری و دوکتورا، شامل فیس تحصیلی، کمک هزینه زندگی، بلیط طیاره، و بیمه صحی، با تمرکز قوی بر رهبری آینده.",
+    facts:["تمویل کامل: فیس تحصیلی، کمک هزینه، بلیط طیاره، و بیمه","فقط سطح ماستری و دوکتورا — بدون مسیر لیسانس","بسیار رقابتی؛ سابقه قوی تحصیلی و رهبری انتظار می‌رود","از طریق سفارت امریکا یا سازمان‌های همکار در منطقه شما اداره می‌شود"],
+    eligibility:["داشتن سند لیسانس (برای مسیر ماستری) یا کار تحصیلی مرتبط (برای مسیر دوکتورا)","تسلط قوی به انگلیسی — معمولاً از طریق آزمون TOEFL یا IELTS نشان داده می‌شود","برنامه روشن برای بازگشت و مشارکت در جامعه خود پس از اتمام برنامه","محدودیت سنی رسمی وجود ندارد، اما اکثر برندگان در اوایل تا میانه دوره کاری خود هستند"],
+    tips:["بیانیه هدف خود را زود شروع کنید — باید رهبری و برنامه بازگشت را نشان دهد","آزمون تسلط به انگلیسی (TOEFL/IELTS) را خیلی قبل از ضرب‌الاجل بگیرید","معرفی‌نامه‌های قوی از افرادی که کار شما را خوب می‌شناسند بگیرید","دقیق توضیح دهید چرا برنامه تحصیلات تکمیلی امریکا (نه فقط 'تحصیل در خارج' به طور کلی) با اهداف شما سازگار است"] },
+  sola:{ name:"سولا (مکتب رهبری افغانستان)", country:"روآندا",
+    summary:"یک مکتب شبانه‌روزی کاملاً تمویل شده مخصوص دختران افغان، که به روآندا منتقل شده، محیطی امن و حمایتی برای تحصیلات متوسطه فراهم می‌کند.",
+    facts:["تجربه مکتب شبانه‌روزی کاملاً تمویل شده","مخصوص دختران افغان","حمایت زبان انگلیسی به عنوان بخشی از برنامه ارائه می‌شود","جامعه کوچک و نزدیک با تمرکز بر توسعه رهبری"],
+    eligibility:["دختر افغان در سن مکتب متوسطه","انگیزه قوی برای یادگیری، حتی بدون زبان انگلیسی قوی قبلی","تمایل به نقل مکان و اقامت شبانه‌روزی در روآندا","پذیرش معمولاً به صورت سالانه باز می‌شود — وب‌سایت سولا را برای فرصت‌های فعلی بررسی کنید"],
+    tips:["در درخواست خود بر پایداری و انگیزه تأکید کنید، نه فقط نمرات","زود تماس بگیرید — این برنامه کرسی‌های محدود دارد و مستقیماً با خانواده‌ها کار می‌کند","هرگونه تجربه رهبری، حتی غیر رسمی (کمک در جامعه، رهنمایی خواهر و برادر و غیره) را برجسته کنید"] },
+  mext:{ name:"بورس میکست (جاپان)", country:"جاپان",
+    summary:"یک بورس دولت جاپان که تحصیلات ماستری و دوکتورا را پوشش می‌دهد، همراه با کمک هزینه ماهانه، معافیت از فیس تحصیلی، و اغلب یک دوره آماده‌سازی زبان جاپانی.",
+    facts:["معافیت کامل از فیس تحصیلی به همراه کمک هزینه ماهانه","معمولاً شامل بلیط طیاره رفت و برگشت","برخی برنامه‌ها به انگلیسی تدریس می‌شوند، برخی نیاز به زبان جاپانی دارند","درخواست معمولاً از طریق سفارت جاپان در کشور محل اقامت شما انجام می‌شود"],
+    eligibility:["داشتن یا در حال تکمیل سند لیسانس (برای ماستری) یا سند ماستری (برای دوکتورا)","عموماً زیر ۳۵ سال در زمان درخواست","تسلط به انگلیسی یا جاپانی بسته به برنامه مشخص","درخواست از طریق بخش تحصیلی سفارت جاپان در کشور محل اقامت شما"],
+    tips:["بررسی کنید که آیا برنامه مورد نظر شما به انگلیسی تدریس می‌شود یا از ابتدا به زبان جاپانی نیاز دارد","مستقیماً با بخش تحصیلی سفارت تماس بگیرید — جدول زمانی می‌تواند هر سال تغییر کند","پروپوزال تحقیقاتی روشن برای مسیر تحصیلات تکمیلی بسیار مهم است — زود شروع به نوشتن کنید","باز بودن به گذراندن یک سال آماده‌سازی زبان جاپانی می‌تواند گزینه‌های شما را گسترش دهد"] },
+  chevening:{ name:"بورس شیونینگ", country:"بریتانیا",
+    summary:"یک بورس دولت بریتانیا برای برنامه‌های ماستری یک ساله، مخصوص رهبران نوظهور، شامل فیس تحصیلی، هزینه‌های زندگی، و سفر.",
+    facts:["درجه ماستری یک ساله کاملاً تمویل شده در بریتانیا","نیاز به حداقل دو سال تجربه کاری","تمرکز قوی بر رهبری و تأثیرگذاری آینده","بسیار رقابتی — هزاران متقاضی سالانه"],
+    eligibility:["حداقل دو سال تجربه کاری مرتبط","تسلط قوی به انگلیسی (معمولاً IELTS یا معادل آن مورد نیاز است)","داستان رهبری روشن و برنامه‌ای برای استفاده از این درجه جهت ایجاد تأثیر در وطن","باید حداقل دو سال پس از دریافت بورس به کشور خود بازگردید"],
+    tips:["تجربه کاری قابل مذاکره نیست — اگر هنوز محصل هستید، قبل از درخواست آن را بسازید","مقاله‌های شما مهم‌تر از سوابق کاری‌تان هستند — تمرین کنید داستان رهبری روشنی روایت کنید","همان‌طور که لازم است به سه برنامه ماستری مختلف بریتانیا درخواست دهید، مطمئن شوید گزینه‌های واقع‌بینانه هستند","زود آزمون انگلیسی بگیرید، زیرا دریافت نتایج ممکن است هفته‌ها طول بکشد"] },
+  daad:{ name:"بورس‌های داد (آلمان)", country:"آلمان",
+    summary:"یک برنامه بزرگ با تمویل دولت آلمان با ده‌ها مسیر بورس در سطح لیسانس، ماستری، و دوکتورا، به ویژه قوی در رشته‌های انجینیری و تخنیکی.",
+    facts:["مسیرهای متعدد: ماستری مرتبط با توسعه، کمک‌های تحقیقاتی، برنامه‌های ساندویچ دوکتورا، و بیشتر","شامل فیس تحصیلی، کمک هزینه، و اغلب بیمه صحی","برنامه‌ها به انگلیسی و آلمانی موجود است","به ویژه قوی برای رشته‌های انجینیری، علوم، و مرتبط با توسعه"],
+    eligibility:["شرایط بسته به مسیر متفاوت است — برنامه مشخص داد که برای آن درخواست می‌دهید را بررسی کنید","عموماً نیاز به تکمیل سند در سطح پایین‌تر از سطحی که درخواست می‌دهید","تسلط به انگلیسی یا آلمانی بسته به زبان تدریس برنامه","برخی الزامات IELTS/TOEFL در صورتی که سند قبلی شما به انگلیسی تدریس شده باشد، ممکن است لغو شود"],
+    tips:["پایگاه داده داد را بر اساس رشته مرور کنید — اغلب مسیرهای مرتبط بیشتری وجود دارد که مردم متوجه نمی‌شوند","اگر سند لیسانس شما به انگلیسی تدریس شده، از دانشگاه خود نامه تاییدیه بگیرید — این می‌تواند الزامات آزمون زبان را لغو کند","برای مسیرهای مبتنی بر تحقیق، زود با استادان راهنمای احتمالی تماس بگیرید","نامه انگیزشی خود را برای مسیر مشخص تنظیم کنید، نه یک پیشنهاد کلی 'تحصیل در آلمان'"] },
+  "erasmus-mundus":{ name:"اراسموس موندوس (ماستری مشترک)", country:"اروپا و کشورهای همکار",
+    summary:"بورسیه‌های تحصیلی کاملاً تمویل شده برای برنامه‌های ماستری مشترک که در چندین دانشگاه اروپایی تدریس می‌شود، برای بهترین درخواست‌دهندگان جهان از طریق یک رقابت مشترک اعطا می‌گردد.",
+    facts:["بورسیه کامل شامل فیس تحصیلی، هزینه سفر، هزینه ویزه، و کمک هزینه ماهانه زندگی می‌شود","تحصیل در دو یا چند دانشگاه در کشورهای مختلف صورت می‌گیرد","برنامه‌ها معمولاً یک تا دو سال تحصیلی طول می‌کشد","ضرب‌الاجل‌ها بسته به برنامه متفاوت است، معمولاً بین اکتوبر و جنوری"],
+    eligibility:["داشتن سند لیسانس یا معادل آن","رعایت شرایط علمی و زبانی برنامه مشخص","باز برای درخواست‌دهندگان از هر ملیتی، شامل محصلان افغان"],
+    tips:["مستقیماً از طریق ویب‌سایت کنسرسیوم برنامه مشترک مشخص درخواست دهید، نه یک پورتال عمومی","برنامه‌ها بسیار متفاوت هستند — شرایط دقیق برنامه مورد نظر خود را بخوانید","نامه انگیزشی خود را برای برنامه مشترک مشخص تنظیم کنید، نه فقط 'تحصیل در اروپا'"] },
+  turkiye:{ name:"بورسیه‌های ترکیه (Türkiye Scholarships)", country:"ترکیه",
+    summary:"یک بورسیه دولت ترکیه برای محصلان بین‌المللی در سطح لیسانس، ماستری، و دوکتورا، شامل معرفی به دانشگاه و یک سال آماده‌گی زبان ترکی.",
+    facts:["تمویل کامل: فیس تحصیلی، کمک هزینه ماهانه، اقامت، بیمه صحی، و تکت طیاره","شامل یک دوره آماده‌گی زبان ترکی پیش از آغاز برنامه شما","باز برای درخواست‌دهندگان سطح لیسانس، ماستری، و دوکتورا","انتخاب بر اساس شایستگی علمی و مجموع درخواست شما صورت می‌گیرد"],
+    eligibility:["باز برای درخواست‌دهندگان از هر ملیتی، شامل محصلان افغان","حد اقل نمرات و سن بسته به سطح تحصیلی متفاوت است","محصلانی که در حال حاضر در همان سطح در یک دانشگاه ترکیه درس می‌خوانند واجد شرایط نیستند"],
+    tips:["فقط از طریق پورتال رسمی بورسیه‌های ترکیه درخواست دهید — درخواست رایگان است","در مورد رشته مورد نظر خود و ارتباط آن با اهدافتان مشخص باشید","تقویم سالانه را با دقت بررسی کنید، زیرا ممکن است هر سال تغییر کند"] },
+  isdb:{ name:"بورسیه‌های بانک اسلامی انکشاف (آی‌اس‌دی‌بی)", country:"دانشگاه‌های همکار در کشورهای عضو",
+    summary:"بورسیه‌های متمرکز بر توسعه برای محصلان کشورهای عضو بانک اسلامی انکشاف، شامل افغانستان، از سطح لیسانس تا دوکتورا با تاکید بر علوم و تکنالوژی.",
+    facts:["مسیرها از سطح لیسانس تا دوکتورا موجود است","مسیرهای سطح ماستری اغلب بر علوم، تکنالوژی، انجینیری، و رشته‌های طبی تمرکز دارد","مزایا و شرایط بسته به مسیر مشخص متفاوت است"],
+    eligibility:["اتباع افغانستان واجد شرایط هستند، زیرا افغانستان یک کشور عضو بانک اسلامی انکشاف است","رعایت شرایط علمی و رشته‌ای مسیر مشخص","اولویت اغلب به رشته‌های مرتبط با نیازهای انکشافی ملی داده می‌شود"],
+    tips:["رشته تحصیلی را انتخاب کنید که بتوانید آن را به وضوح با یک نیاز انکشافی در جامعه خود مرتبط سازید","کتابچه رسمی برنامه سال جاری را بخوانید — جزئیات هر سال تغییر می‌کند","یک پلان مشخص و واضح برای چگونگی استفاده از سند خود پس از فراغت آماده کنید"] },
+  "stipendium-hungaricum":{ name:"استیپندیوم هنگاریکم (بورسیه هنگری)", country:"هنگری",
+    summary:"یک بورسیه دولت هنگری برای محصلان بین‌المللی، که از طریق توافقات همکاری مخصوص هر کشور ارائه می‌شود، شامل تحصیل از سطح لیسانس تا دوکتورا.",
+    facts:["رشته‌ها و سطوح تحصیلی موجود بسته به فراخوان سال جاری برای افغانستان متفاوت است","بسیاری از درخواست‌دهندگان باید از طریق یک توافق همکاری معرفی شوند","پورتال درخواست شرایط مخصوص هر ملیت را فهرست می‌کند"],
+    eligibility:["امکان دسترسی برای درخواست‌دهندگان افغان بسته به توافق همکاری سال جاری است","رعایت شرایط علمی و زبانی پذیرش دانشگاه","پیروی از روند رسمی معرفی که برای کشور شما لازم است"],
+    tips:["پیش از صرف وقت روی این درخواست، تایید کنید که آیا افغانستان فراخوان فعال دارد یا خیر","به پست‌های قدیمی اعتماد نکنید — مستقیماً پورتال رسمی را بررسی کنید","از طریق نهاد معرفی درست برای وضعیت خود درخواست دهید"] }
+},
+pus: {
+  uwc:{ name:"یو‌دبلیو‌سی (نړیوال متحد کالجونه) — د افغانستان ملي کمېټه", country:"بېلابېل هېوادونه (له ۱۶ څخه ډېر)",
+    summary:"د یو‌دبلیو‌سی په نړیوالو کمپسونو کې بشپړ تمویل شوی دوه کلن نړیوال لیسه‌یی برنامه (د IB ډیپلوم)، چې د افغانستان لپاره ځانګړې ملي کمېټې له لارې چلېږي.",
+    facts:["بشپړ تمویل: د زده‌کړې فیس، خواړه او استوګنه، او د سفر مرسته","د نړیوال بکلوریا (IB) ډیپلوم دوه کلن پروګرام","غوښتنلیکونه هر کال خلاصېږي، وروستۍ نېټه معمولا د اکتوبر په پای کې ده","د یو‌دبلیو‌سی ۷۰٪ زده‌کوونکي بشپړه یا نیمه مالي مرسته ترلاسه کوي"],
+    eligibility:["د افغانستان تبعه، د غوښتنلیک په وخت کې ۱۵ تر ۱۷ کلن","اوس مهال په منځنۍ ښوونځي یا لیسه کې وي یا یې پای ته رسولی وي (د آنلاین یا ټولنیزو زده‌کړو غیر رسمي لارې هم شاملې دي)","په افغانستان یا ګاونډي هېواد (پاکستان، ایران، تاجکستان، ازبکستان، ترکمنستان) کې اوسېدونکی، یا په بل ځای کې د کډوال په توګه","اعتبار لرونکې تذکره او په غوره توګه اعتبار لرونکی افغان پاسپورت"],
+    tips:["خپل فکري لېوالتیا له نمرو ور هاخوا وښایاست — کلبونه، خپلواک زده‌کړه، او ټولنیز پروژې ټول اهمیت لري","ښځینه غوښتونکي او هغه چې د غیر رسمي لارو له مخې یې زده‌کړه کړې، په ځانګړي ډول هڅول کېږي","د خپلو ارزښتونو او ټولنیز ونډې په اړه رښتیني ولیکئ، نه یوازې لاسته راوړنې","د اکتوبر ۳۱ نېټې دمخه غوښتنلیک ورکړئ — بهیر اوس بشپړ آنلاین دی"] },
+  opendoors:{ name:"اوپن ډورز — د روسیې حکومتي بورسیه", country:"روسیه",
+    summary:"د روسیې حکومت لخوا ملاتړ شوی آنلاین اولمپیاډ ډول سیالۍ چې د نړۍ له غوښتونکو سره بشپړ تمویل شوی لیسانس، ماسترۍ، ډاکترا، او پوسټ-ډاکتورا زده‌کړه د روسیې په غوره پوهنتونونو کې وړاندې کوي.",
+    facts:["د زده‌کړې فیس بشپړ معافیت او د حکومت میاشتنی مرستپیسه","د اړتیا په صورت کې وړیا د روسیې ژبې چمتووالي کورس","غوره کول د آنلاین اولمپیاډ (پورتفولیو، ازموینه، او مرکه) له لارې کېږي","زرګونه افغان زده‌کوونکي دمخه د ورته برنامو له لارې په روسیه کې زده‌کړه کوي"],
+    eligibility:["هر ملیت، په شمول د افغانستان اتباع، وړ دي","لیسانس لار: د منځنۍ ښوونځي بشپړول","ماسترۍ لار: د لیسانس یا مساوي سند درلودل","ډاکترا لار: د ماسترۍ یا مساوي سند درلودل","په انګلیسي یا روسي ژبه کې مهارت (د اړتیا په صورت کې د روسیې کورسونه چمتو دي)"],
+    tips:["له پیل څخه یو قوي پورتفولیو جوړ کړئ — علمي سوابق، سندونه، او لاسته راوړنې د لارې د هیئت لخوا نمرې کېږي","د ننوتلو ازموینې بڼه مخکې تمرین کړئ؛ ستاسو د هڅو شمېر محدود دی","که پرته له روسي ژبې غوښتنلیک ورکوئ، وګورئ کوم پوهنتونونه او برنامې په انګلیسي ژبه تدریسېږي","سمدلاسه چې غوښتنلیک دوره پرانیستل کېږي، نوم لیکنه وکړئ — دا بهیر په څو مرحلو کې د میاشتو په اوږدو کې پیښېږي"] },
+  dafi:{ name:"د دافي لوړې زده‌کړې بورسیه (د ملګرو ملتونو د کډوالو کمیشنري)", country:"د پناه‌ورتیا هېواد یا اصلي هېواد",
+    summary:"د ملګرو ملتونو د کډوالو کمیشنري (UNHCR) لخوا چلول شوې بورسیه، ځانګړې د کډوالو لپاره — په شمول ډېرو افغان کډوالو — چې د خپل پناه‌ورتیا هېواد یا اصلي هېواد کې لیسانس بشپړ کړي.",
+    facts:["د زده‌کړې فیس او ډېری وخت د ژوند لګښتونه او مواد پوښي","ځانګړی د کډوالو لپاره، او په ځینو هېوادونو کې د بېرته‌ستنېدونکو لپاره","زده‌کړه د پناه‌ورتیا په هېواد (لکه ایران، پاکستان، تاجکستان، قزاقستان) کې پیښېږي، نه په لویدیځ هېواد کې","زرګونه افغان زده‌کوونکو د دافي له لارې خپل سندونه بشپړ کړي دي"],
+    eligibility:["باید له UNHCR سره نومول شوی کډوال وي، یا په ځینو هېوادونو کې بېرته‌ستنېدونکی","د منځنۍ ښوونځي بشپړول له ښو نمرو سره","د لیسانس زده‌کړې پیل کولو اراده","شتون ستاسو په اوسني استوګنځای پورې اړه لري — خپل سیمه‌ییز UNHCR دفتر سره اړیکه ونیسئ"],
+    tips:["لومړی له خپل سیمه‌ییز UNHCR دفتر سره نوم لیکنه وکړئ — دا معمولا مخکېنۍ اړتیا ده","د نوم لیکنې پر مهال په ځانګړي ډول د دافي په اړه پوښتنه وکړئ؛ تل پراخه نه اعلانېږي","خپل ښوونځي اسناد او د کډوالتوب اسناد سم وساتئ او د اړتیا په صورت کې ژباړه یې کړئ","سمدلاسه چې سیمه‌ییز غوښتنلیک خلاصېږي، غوښتنلیک ورکړئ — بودیجه او ځایونه هر کال محدود دي"] },
+  fulbright:{ name:"د فولبرایټ د بهرنیو زده‌کوونکو پروګرام", country:"متحده ایالات امریکا",
+    summary:"د امریکا حکومت بشپړ تمویل شوی پروګرام د ماسترۍ او ډاکترا زده‌کړې لپاره، چې د زده‌کړې فیس، د ژوند مرستپیسه، الوتنه، او روغتیایي بیمه پوښي، او پیاوړی تمرکز یې پر راتلونکي مشرتابه دی.",
+    facts:["بشپړ تمویل: فیس، مرستپیسه، الوتنه، او بیمه","یوازې ماسترۍ او ډاکترا کچه — د لیسانس لار نشته","ډېر سیالي لرونکی؛ پیاوړی علمي او مشرتابه سابقه هیله کېږي","د امریکا سفارت یا سیمه‌ییز شریک سازمانونو له لارې اداره کېږي"],
+    eligibility:["د لیسانس سند درلودل (د ماسترۍ لار لپاره) یا اړوند لوړ زده‌کړیز کار (د ډاکترا لار لپاره)","په انګلیسي کې پیاوړی مهارت — معمولا د TOEFL یا IELTS له لارې ښودل کېږي","د بېرته‌ستنېدو او په خپله ټولنه کې ونډې اخیستو روښانه پلان","رسمي عمري برید نشته، خو ډېری ګټونکي د خپلې مسلکي دورې په لومړیو یا منځنیو کې دي"],
+    tips:["خپل د موخې بیان مخکې پیل کړئ — باید مشرتابه او د بېرته‌ستنېدو پلان وښایي","د انګلیسي مهارت ازموینه (TOEFL/IELTS) د نیټې دمخه اخلئ","پیاوړي علمي او مسلکي سپارښتنلیکونه له هغو کسانو ترلاسه کړئ چې ستاسو کار ښه پېژني","روښانه وښایاست چې ولې د امریکا لوړه زده‌کړه (نه یوازې عمومي 'بهرنۍ زده‌کړه') ستاسو موخو سره برابره ده"] },
+  sola:{ name:"سولا (د افغانستان د مشرتابه ښوونځی)", country:"روانډا",
+    summary:"یو بشپړ تمویل شوی د لوېدو ښوونځی ځانګړی د افغان نجونو لپاره، چې روانډا ته لېږدول شوی، یو خوندي او ملاتړ کوونکی چاپېریال د منځنۍ زده‌کړې لپاره وړاندې کوي.",
+    facts:["بشپړ تمویل شوی د لوېدو ښوونځي تجربه","ځانګړی د افغان نجونو لپاره","د انګلیسي ژبې ملاتړ د پروګرام برخه ده","کوچنۍ، نږدې ټولنه چې پر مشرتابه پرمختګ تمرکز لري"],
+    eligibility:["د منځنۍ ښوونځي عمر لرونکې افغان نجلۍ","د زده‌کړې پیاوړې هڅه، حتی پرته له مخکینۍ پیاوړې انګلیسي","د روانډا ته د لېږد او د لوېدو لپاره چمتووالی","منل معمولا په کلني دوره کې خلاصېږي — د اوسنیو فرصتونو لپاره د سولا ویب پاڼه وګورئ"],
+    tips:["په خپل غوښتنلیک کې پر زغم او هڅه ټینګار وکړئ، نه یوازې پر نمرو","مخکې اړیکه ونیسئ — دا پروګرام محدود ځایونه لري او مستقیم له کورنیو سره کار کوي","هر ډول د مشرتابه تجربه، حتی غیر رسمي (په ټولنه کې مرسته، د خویندو ورونو لارښوونه، او نور) وښایاست"] },
+  mext:{ name:"د میکسټ بورسیه (جاپان)", country:"جاپان",
+    summary:"د جاپان حکومت بورسیه چې ماسترۍ او ډاکترا زده‌کړه پوښي، د میاشتني مرستپیسې، د زده‌کړې فیس معافیت، او ډېری وخت د جاپاني ژبې چمتووالي دورې سره.",
+    facts:["د زده‌کړې فیس بشپړ معافیت او میاشتنی مرستپیسه","معمولا د تګ راتګ الوتنه پکې شامله ده","ځینې برنامې په انګلیسي تدریسېږي، ځینو ته جاپاني ژبه اړینه ده","غوښتنلیک معمولا د استوګنې هېواد کې د جاپان سفارت له لارې کېږي"],
+    eligibility:["د لیسانس سند درلودل یا بشپړول (د ماسترۍ لپاره) یا د ماسترۍ سند (د ډاکترا لپاره)","معمولا د غوښتنلیک په وخت کې تر ۳۵ کلونو کم عمر","د ځانګړي پروګرام له مخې په انګلیسي یا جاپاني ژبه کې مهارت","غوښتنلیک د خپل استوګنې هېواد کې د جاپان سفارت د زده‌کړې برخې له لارې"],
+    tips:["وګورئ چې ایا ستاسو موخه‌ییز پروګرام په انګلیسي تدریسېږي یا له پیل څخه جاپاني ژبه ته اړتیا لري","مستقیم د سفارت د زده‌کړې برخې سره اړیکه ونیسئ — مهالویش کولی شي هر کال بدلون وکړي","د تحصیلي دورې لپاره روښانه څېړنیز وړاندیز ډېر اهمیت لري — یې لیکل مخکې پیل کړئ","د جاپاني ژبې د چمتووالي یو کال ته چمتووالی ستاسو فرصتونه پراخولی شي"] },
+  chevening:{ name:"د شیوننګ بورسیه", country:"برتانیا",
+    summary:"د برتانیا حکومت بورسیه د یو کلن ماسترۍ برنامو لپاره، ځانګړې د راتلونکو مشرانو لپاره، چې د زده‌کړې فیس، د ژوند لګښتونه، او سفر پوښي.",
+    facts:["بشپړ تمویل شوی یو کلن ماسترۍ سند په برتانیا کې","لږترلږه دوه کاله د کار تجربې ته اړتیا لري","پیاوړی تمرکز پر مشرتابه او راتلونکي اغېز","ډېر سیالي لرونکی — کلنی زرګونه غوښتونکي"],
+    eligibility:["لږترلږه دوه کاله اړوند کاري تجربه","په انګلیسي کې پیاوړی مهارت (معمولا IELTS یا مساوي اړین دی)","روښانه د مشرتابه کیسه او د دې سند د کارولو پلان د خپل هېواد کې د اغېز لپاره","باید د بورسیې ترلاسه کولو وروسته لږترلږه دوه کاله خپل هېواد ته ستون شئ"],
+    tips:["کاري تجربه د تړون وړ نه ده — که تاسو لا هم زده‌کوونکی یاست، غوښتنلیک ورکولو دمخه یې جوړه کړئ","ستاسو انشاوې ستاسو له سي‌وي څخه ډېر اهمیت لري — د مشرتابه روښانه کیسه ویلو تمرین وکړئ","لکه څنګه چې اړینه ده، درې مختلفو برتانیا ماسترۍ کورسونو ته غوښتنلیک ورکړئ، ډاډ ترلاسه کړئ چې واقعي انتخابونه دي","د انګلیسي ازموینه مخکې واخلئ ځکه چې پایلې ترلاسه کول کولی شي څو اونۍ ونیسي"] },
+  daad:{ name:"د ډاد بورسیې (جرمني)", country:"جرمني",
+    summary:"د جرمني حکومت لخوا تمویل شوی لوی پروګرام چې لسګونه بورسیه لارې د لیسانس، ماسترۍ، او ډاکترا کچو کې لري، په ځانګړي ډول په انجینري او تخنیکي ډګرونو کې پیاوړی.",
+    facts:["ډېری لارې: د پرمختګ اړوند ماسترۍ، څېړنیزې مرستې، د ډاکترا سنڈویچ برنامې، او نور","د زده‌کړې فیس، مرستپیسه، او ډېری وخت روغتیایي بیمه پوښي","برنامې په انګلیسي او جرمني ژبو کې شتون لري","په ځانګړي ډول د انجینري، ساینس، او پرمختګ اړوندو ډګرونو لپاره پیاوړی"],
+    eligibility:["اړتیاوې د لارې له مخې توپیر لري — هغه ځانګړی ډاد پروګرام وګورئ چې غوښتنلیک ورته ورکوئ","معمولا د هغه کچې لاندې بشپړ سند ته اړتیا لري چې غوښتنلیک ورته ورکوئ","د پروګرام د تدریس ژبې له مخې انګلیسي یا جرمني ژبه کې مهارت","ځینې IELTS/TOEFL اړتیاوې کولی شي لغوه شي که ستاسو مخکینی سند په انګلیسي تدریس شوی وي"],
+    tips:["د ډاد ډیټابیس د ډګر له مخې وګورئ — اکثرا ډېرې اړونده لارې شتون لري چې خلک یې نه پوهېږي","که ستاسو لیسانس سند په انګلیسي تدریس شوی، له خپل پوهنتون څخه تایید لیک ترلاسه کړئ — دا کولی شي د ژبې ازموینې اړتیاوې لغوه کړي","د څېړنې پر بنسټ لارو لپاره، مخکې له احتمالي سرپرست استادانو سره اړیکه ونیسئ","خپل د انګیزې لیک د ځانګړې لارې لپاره برابر کړئ، نه د جرمني کې د زده‌کړې لپاره عمومي وړاندیز"] },
+  "erasmus-mundus":{ name:"اېراسموس موندوس (ګډ ماسترۍ برنامه)", country:"اروپا او همکار هېوادونه",
+    summary:"بشپړ تمویل شوي ګډ ماسترۍ درجې چې په اروپا کې په څو پوهنتونونو کې تدریسېږي، د نړۍ غوره غوښتونکو ته د یو رقابتي ګډ ټاکنې له لارې ورکول کېږي.",
+    facts:["بشپړ بورسیه د زده‌کړې فیس، د سفر لګښت، د ویزې لګښت، او میاشتنۍ ژوند مرسته پوښي","زده‌کړه په دوو یا ډېرو پوهنتونونو کې په بېلابېلو هېوادونو کې ترسره کېږي","برنامې معمولا یو تر دوو تحصیلي کلونه دوام لري","وروستۍ نېټې د برنامې له مخې توپیر لري، معمولا د اکتوبر او جنورۍ ترمنځ"],
+    eligibility:["د لیسانس سند یا معادل ولري","د ځانګړې برنامې علمي او ژبني اړتیاوې پوره کړي","د هرې ملیت لپاره پرانیستی، په شمول د افغان زده‌کوونکو"],
+    tips:["مستقیما د ځانګړې ګډې برنامې کنسرشیم ویب‌پاڼې له لارې غوښتنلیک ورکړئ، نه د عمومي پورتال له لارې","برنامې ډېر توپیر لري — د خپلې غوره برنامې دقیق شرایط ولولئ","خپل د انګیزې لیک د ځانګړې ګډې برنامې لپاره برابر کړئ، نه یوازې 'په اروپا کې زده‌کړه'"] },
+  turkiye:{ name:"د ترکیې بورسیې (Türkiye Scholarships)", country:"ترکیه",
+    summary:"د ترکیې د حکومت بورسیه چې نړیوالو زده‌کوونکو ته د لیسانس، ماسترۍ، او ډاکترا په کچو کې ورکول کېږي، پکې د پوهنتون ځای پرځای کول او د ترکي ژبې چمتووالي کال شامل دي.",
+    facts:["بشپړ تمویل: د زده‌کړې فیس، میاشتنۍ مرستپیسه، استوګنه، روغتیایي بیمه، او الوتنه","د خپلې برنامې له پیل مخکې د ترکي ژبې چمتووالي کورس شامل دی","د لیسانس، ماسترۍ، او ډاکترا غوښتونکو لپاره پرانیستی","ټاکنه د علمي وړتیا او ستاسو د بشپړ غوښتنلیک پر بنسټ کېږي"],
+    eligibility:["د هرې ملیت لپاره پرانیستی، په شمول د افغان زده‌کوونکو","لږترلږه نمرې او د عمر اړتیاوې د زده‌کړې کچې له مخې توپیر لري","هغه زده‌کوونکي چې اوس مهال په ترکیه کې په همدې کچه زده‌کړه کوي، وړ نه دي"],
+    tips:["یوازې د ترکیې بورسیو رسمي پورتال له لارې غوښتنلیک ورکړئ — غوښتنلیک وړیا دی","د خپل موخو ډګر او د هغه له موخو سره اړیکې په اړه ځانګړی اوسئ","کلنی مهالویش په دقت سره وګورئ، ځکه چې کولی شي هر کال بدل شي"] },
+  isdb:{ name:"د اسلامي پرمختیایي بانک (IsDB) بورسیې", country:"د غړو هېوادونو همکار پوهنتونونه",
+    summary:"د پرمختګ محوره بورسیې د اسلامي پرمختیایي بانک د غړو هېوادونو زده‌کوونکو لپاره، په شمول افغانستان، د لیسانس تر ډاکترا کچې پورې د ساینس او ټکنالوژۍ پر بنسټ.",
+    facts:["لارې د لیسانس تر ډاکترا پورې شتون لري","د ماسترۍ کچې لارې اکثرا په ساینس، ټکنالوژۍ، انجینري، او طبي ډګرونو تمرکز کوي","ګټې او د وړتیا شرایط د ځانګړې لارې له مخې توپیر لري"],
+    eligibility:["افغان اتباع وړ دي، ځکه افغانستان د اسلامي پرمختیایي بانک غړی هېواد دی","د ځانګړې لارې علمي او ډګر اړتیاوې پوره کړي","لومړیتوب اکثرا هغو ډګرونو ته ورکول کېږي چې د ملي پرمختګ اړتیاو سره تړاو لري"],
+    tips:["هغه ډګر وټاکئ چې تاسو یې کولی شئ په ښکاره ډول له خپلې ټولنې د پرمختګ اړتیا سره وتړئ","د اوسني کال رسمي برنامه کتابچه ولولئ — تفصیلات هر کال بدلېږي","د فراغت وروسته د خپل سند کارولو لپاره یو روښانه، ځانګړی پلان چمتو کړئ"] },
+  "stipendium-hungaricum":{ name:"سټايپنډيم هنګاریکم (د هنګري بورسیه)", country:"هنګري",
+    summary:"د هنګري د حکومت بورسیه د نړیوالو زده‌کوونکو لپاره، چې د هېواد په کچه د همکارۍ تړونونو له لارې وړاندې کېږي، د لیسانس تر ډاکترا زده‌کړه پوښي.",
+    facts:["شتون لرونکي ډګرونه او زده‌کړې کچې د افغانستان لپاره د اوسني کال غوښتنې پر بنسټ توپیر لري","ډېری غوښتونکي باید د لیږونکي شریک تړون له لارې معرفي شي","د غوښتنلیک پورتال د تابعیت پر بنسټ ځانګړي شرایط لیست کوي"],
+    eligibility:["د افغان غوښتونکو لپاره شتون د اوسني کال د همکارۍ تړون پورې اړه لري","د پوهنتون علمي او ژبني د منلو اړتیاوې پوره کړي","د خپل هېواد لپاره اړین رسمي معرفي بهیر تعقیب کړئ"],
+    tips:["مخکې له دې چې پدې غوښتنلیک وخت ولګوئ، تایید کړئ چې ایا افغانستان فعال غوښتنه لري","پخوانیو پوسټونو ته تکیه مه کوئ — مستقیم رسمي پورتال وګورئ","د خپلې دریځ لپاره د سمې معرفي کوونکې ادارې له لارې غوښتنلیک ورکړئ"] }
+}
+};
+
+/* ============== PORTFOLIO TIPS CONTENT (trilingual) ============== */
+const PORTFOLIO_TIPS = {
+  general: { color:"var(--lapis)",
+    en:{ title:"General — for any field", steps:[
+      "Start early — reputation and skills build over years, not weeks",
+      "Keep a \"brag document\" — record every achievement, project, or award the moment it happens",
+      "Get strong recommendation letters from people who know your work well, not just your title",
+      "Learn English deeply — it opens far more doors than any single scholarship",
+      "Look for smaller local competitions and programs first — they build the track record for bigger ones later",
+      "Apply broadly — treat scholarships like a numbers game, not a single bet"
+    ]},
+    prs:{ title:"عمومی — برای هر رشته", steps:[
+      "زود شروع کنید — شهرت و مهارت‌ها در طول سال‌ها ساخته می‌شوند، نه هفته‌ها",
+      "یک «دفترچه دستاوردها» نگه دارید — هر دستاورد، پروژه، یا جایزه را همان لحظه ثبت کنید",
+      "معرفی‌نامه‌های قوی از افرادی بگیرید که کار شما را خوب می‌شناسند، نه فقط عنوان شما را",
+      "انگلیسی را عمیقاً یاد بگیرید — دروازه‌های بیشتری از هر بورس واحد باز می‌کند",
+      "ابتدا به دنبال مسابقات و برنامه‌های محلی کوچک‌تر باشید — این‌ها سابقه لازم برای فرصت‌های بزرگ‌تر را می‌سازند",
+      "به طور گسترده درخواست دهید — بورس‌ها را مانند یک بازی اعداد ببینید، نه یک شرط‌بندی واحد"
+    ]},
+    pus:{ title:"عمومي — د هر ډګر لپاره", steps:[
+      "زر پیل وکړئ — شهرت او مهارتونه د کلونو په اوږدو کې جوړېږي، نه اونیو کې",
+      "یو «د لاسته راوړنو یاداښت» وساتئ — هره لاسته راوړنه، پروژه، یا جایزه سمدلاسه ثبت کړئ",
+      "پیاوړي سپارښتنلیکونه له هغو کسانو ترلاسه کړئ چې ستاسو کار ښه پېژني، نه یوازې ستاسو رتبه",
+      "انګلیسي ژبه په ژوره توګه زده کړئ — د هر یو بورسیې په پرتله ډېرې دروازې خلاصوي",
+      "لومړی د کوچنیو سیمه‌ییزو سیالیو او برنامو په لټه کې اوسئ — دا د لویو فرصتونو لپاره سابقه جوړوي",
+      "پراخه غوښتنلیک ورکړئ — بورسیې د شمېرو لوبې غوندې وګورئ، نه یوه یوازینۍ شرط"
+    ]}
+  },
+  tech: { color:"var(--teal)",
+    en:{ title:"Engineering, Computer Science & Technology", steps:[
+      "Build real projects, not just tutorials — pick a problem people actually have and ship something",
+      "Put your work on GitHub with a clear README, even for small projects",
+      "Enter coding competitions and hackathons, local or online — Kaggle, Codeforces, and hackathons all count",
+      "Get a certificate from a recognized platform (Coursera, freeCodeCamp, edX) to show self-directed learning",
+      "Contribute to an open-source project, even a small fix — it shows real collaboration skill",
+      "Record a short demo video of your best project — admissions committees remember what they can see working"
+    ]},
+    prs:{ title:"انجینیری، کمپیوتر ساینس، و تکنالوژی", steps:[
+      "پروژه‌های واقعی بسازید، نه فقط آموزش‌ها — یک مشکل واقعی مردم را انتخاب کنید و چیزی بسازید",
+      "کار خود را در گیت‌هاب با یک README واضح قرار دهید، حتی برای پروژه‌های کوچک",
+      "در مسابقات کدنویسی و هکاتون‌ها (محلی یا آنلاین) شرکت کنید — کگل، کدفورسز، و هکاتون‌ها همه اهمیت دارند",
+      "از یک پلتفرم معتبر (Coursera، freeCodeCamp، edX) گواهینامه بگیرید تا یادگیری خودجوش خود را نشان دهید",
+      "در یک پروژه متن‌باز مشارکت کنید، حتی یک اصلاح کوچک — مهارت همکاری واقعی را نشان می‌دهد",
+      "یک ویدیوی کوتاه از بهترین پروژه خود ضبط کنید — کمیته‌های پذیرش آنچه را که کار کردنش را می‌بینند، به یاد می‌آورند"
+    ]},
+    pus:{ title:"انجینري، کمپیوټر ساینس، او ټکنالوژي", steps:[
+      "واقعي پروژې جوړې کړئ، نه یوازې زده‌کړیز تمرینونه — یو واقعي ستونزه غوره کړئ او یو څه جوړ کړئ",
+      "خپل کار په ګیتهب کې د روښانه README سره کېږدئ، حتی د کوچنیو پروژو لپاره",
+      "په کوډ لیکنې سیالیو او هکاتونونو (سیمه‌ییز یا آنلاین) کې برخه واخلئ — کاګل، کوډفورسز، او هکاتونونه ټول اهمیت لري",
+      "د یوې پېژندل شوې پلیټ‌فورمې (Coursera، freeCodeCamp، edX) څخه سند ترلاسه کړئ ترڅو خپلواکه زده‌کړه وښایاست",
+      "په یوه خلاص‌سرچینه پروژه کې برخه واخلئ، حتی یوه کوچنۍ اصلاح — واقعي همکاري مهارت ښیي",
+      "د خپلې غوره پروژې یو لنډ ویډیو ثبت کړئ — د منلو کمېټې هغه څه یادوي چې کار کولو یې ویني"
+    ]}
+  },
+  medicine: { color:"var(--green)",
+    en:{ title:"Medicine & Health Sciences", steps:[
+      "Volunteer at a clinic, hospital, or health awareness campaign — direct exposure matters",
+      "Keep grades strong specifically in biology and chemistry — these are scrutinized closely",
+      "Shadow a doctor or health worker if you can arrange it, even informally",
+      "Join or start a community health initiative, like hygiene education or first-aid training for peers",
+      "Look for research assistant roles, even unpaid, at local universities or clinics",
+      "Document your volunteer hours and get testimonials from supervisors"
+    ]},
+    prs:{ title:"طب و علوم صحی", steps:[
+      "در یک کلینیک، شفاخانه، یا کمپاین آگاهی صحی داوطلب شوید — تجربه مستقیم اهمیت دارد",
+      "نمرات خود را به طور خاص در بیولوژی و کیمیا قوی نگه دارید — این‌ها به دقت بررسی می‌شوند",
+      "اگر امکانش را دارید، همراه یک داکتر یا کارمند صحی شوید، حتی به صورت غیر رسمی",
+      "به یک ابتکار صحی اجتماعی بپیوندید یا آن را شروع کنید، مانند آموزش بهداشت یا آموزش کمک‌های اولیه به همسالان",
+      "به دنبال نقش‌های کمک تحقیقاتی باشید، حتی بدون معاش، در دانشگاه‌ها یا کلینیک‌های محلی",
+      "ساعات کار داوطلبانه خود را ثبت کنید و از سرپرستان توصیه‌نامه بگیرید"
+    ]},
+    pus:{ title:"طب او روغتیايي علوم", steps:[
+      "په کلینیک، روغتون، یا روغتیایي پوهاوی کمپاین کې رضاکار شئ — مستقیم تجربه اهمیت لري",
+      "خپلې نمرې په ځانګړي ډول په بیولوژي او کیمیا کې پیاوړې وساتئ — دا په دقت سره کتل کېږي",
+      "که امکان یې وي، له یوه ډاکټر یا روغتیایي کارکونکي سره یوځای شئ، حتی غیر رسمي ډول",
+      "یو ټولنیز روغتیایي پروژې ته یوځای شئ یا یې پیل کړئ، لکه د پاکوالي زده‌کړه یا د همځولو لپاره لومړني مرستې زده‌کړه",
+      "د څېړنې مرستیال دندو په لټه کې اوسئ، حتی پرته له معاش، په سیمه‌ییزو پوهنتونونو یا کلینیکونو کې",
+      "خپل د رضاکارۍ ساعتونه ثبت کړئ او د سرپرستانو سپارښتنلیکونه ترلاسه کړئ"
+    ]}
+  },
+  business: { color:"var(--gold)",
+    en:{ title:"Business, Economics & Law", steps:[
+      "Join or start a small business, even informally — real experience beats theory",
+      "Enter case competitions or economics/business olympiads",
+      "Do an internship, even unpaid, at a local company, NGO, or law office",
+      "Join a debate club or Model UN — both are directly relevant to law and business leadership",
+      "Reference real economic issues affecting Afghanistan in your essays — it shows grounded thinking",
+      "Build a small personal project, like a budget tool or a mini business plan, to show initiative"
+    ]},
+    prs:{ title:"بزنس، اقتصاد، و حقوق", steps:[
+      "به یک بزنس کوچک بپیوندید یا آن را شروع کنید، حتی به صورت غیر رسمی — تجربه واقعی بهتر از تئوری است",
+      "در مسابقات کیس یا المپیادهای اقتصاد و بزنس شرکت کنید",
+      "یک کارآموزی انجام دهید، حتی بدون معاش، در یک شرکت محلی، سازمان غیر دولتی، یا دفتر حقوقی",
+      "به کلوپ مناظره یا مدل ملل متحد بپیوندید — هر دو مستقیماً به رهبری حقوقی و بزنسی مرتبط هستند",
+      "در مقالات خود به مسائل واقعی اقتصادی که افغانستان با آن روبروست اشاره کنید — تفکر واقع‌بینانه را نشان می‌دهد",
+      "یک پروژه شخصی کوچک بسازید، مانند یک ابزار بودجه‌بندی یا یک طرح بزنسی کوچک، تا ابتکار خود را نشان دهید"
+    ]},
+    pus:{ title:"سوداګري، اقتصاد، او حقوق", steps:[
+      "یوه کوچنۍ سوداګرۍ ته یوځای شئ یا یې پیل کړئ، حتی غیر رسمي ډول — واقعي تجربه له تیورۍ څخه غوره ده",
+      "په کیس سیالیو یا اقتصاد/سوداګرۍ اولمپیاډونو کې برخه واخلئ",
+      "یوه کارموندنه ترسره کړئ، حتی پرته له معاش، په یوه سیمه‌ییزه شرکت، غیر حکومتي سازمان، یا حقوقي دفتر کې",
+      "مناظرې کلب یا ماډل ملګري ملتونو ته یوځای شئ — دواړه مستقیم د حقوقي او سوداګریز مشرتابه سره اړیکه لري",
+      "په خپلو لیکنو کې افغانستان ته اړوند واقعي اقتصادي مسایل ته اشاره وکړئ — دا حقیقي فکر ښیي",
+      "یوه کوچنۍ شخصي پروژه جوړه کړئ، لکه د بودیجې وسیله یا یو کوچنی سوداګریز پلان، ترڅو خپل ابتکار وښایاست"
+    ]}
+  },
+  social: { color:"var(--rust)",
+    en:{ title:"Social Sciences, Education & Humanities", steps:[
+      "Volunteer teaching or tutoring younger students — this is one of the most respected forms of experience",
+      "Write regularly — a blog, articles, or essays on topics you care about",
+      "Get involved with a local NGO or community organization",
+      "Learn a second or third language — highly valued in social sciences and humanities",
+      "Document community projects you've led or helped organize",
+      "Read broadly outside your required coursework and be ready to discuss it"
+    ]},
+    prs:{ title:"علوم اجتماعی، تعلیم و تربیه، و علوم انسانی", steps:[
+      "به صورت داوطلبانه به محصلان کوچک‌تر تدریس یا کمک درسی کنید — این یکی از محترم‌ترین انواع تجربه است",
+      "به طور منظم بنویسید — یک بلاگ، مقالات، یا انشا در مورد موضوعاتی که برایتان مهم است",
+      "با یک سازمان غیر دولتی یا نهاد اجتماعی محلی همکاری کنید",
+      "زبان دوم یا سوم یاد بگیرید — در علوم اجتماعی و انسانی بسیار ارزشمند است",
+      "پروژه‌های اجتماعی که رهبری آن را کرده‌اید یا در سازماندهی آن کمک کرده‌اید را ثبت کنید",
+      "فراتر از درس‌های الزامی خود مطالعه گسترده داشته باشید و آماده بحث در مورد آن باشید"
+    ]},
+    pus:{ title:"ټولنیز علوم، زده‌کړه، او انساني علوم", steps:[
+      "کوچنیو زده‌کوونکو ته رضاکارانه تدریس یا مرسته وکړئ — دا د تجربې تر ټولو درناوی لرونکی ډول دی",
+      "منظم ولیکئ — یو بلاګ، مقالې، یا انشا د هغو موضوعاتو په اړه چې ستاسو لپاره مهم دي",
+      "له یوه سیمه‌ییز غیر حکومتي سازمان یا ټولنیز اداره سره یوځای شئ",
+      "دویمه یا درېیمه ژبه زده کړئ — په ټولنیزو علومو او انساني علومو کې ډېره ارزښت لري",
+      "هغه ټولنیزې پروژې چې تاسو یې مشري کړې یا په تنظیمولو کې مرسته کړې ثبت کړئ",
+      "د خپلو اړینو زده‌کړو ور هاخوا پراخه مطالعه وکړئ او د بحث لپاره چمتو اوسئ"
+    ]}
+  },
+  arts: { color:"var(--plum)",
+    en:{ title:"Arts, Design & Media", steps:[
+      "Build a portfolio website or social media page showcasing your best work",
+      "Enter art, photography, film, or design competitions, even small local ones",
+      "Publish your work somewhere real — a magazine, YouTube, Instagram, or a local exhibition",
+      "Collaborate on a real project with others — a short film, a mural, a small campaign",
+      "Keep a body of work over time, not just your single best piece — growth matters",
+      "Be ready to explain your creative process, not just show the final result"
+    ]},
+    prs:{ title:"هنر، دیزاین، و رسانه", steps:[
+      "یک وب‌سایت پورتفولیو یا صفحه شبکه اجتماعی بسازید که بهترین کار شما را نمایش دهد",
+      "در مسابقات هنری، عکاسی، فلم، یا دیزاین شرکت کنید، حتی مسابقات کوچک محلی",
+      "کار خود را در یک مکان واقعی منتشر کنید — یک مجله، یوتیوب، اینستاگرام، یا نمایشگاه محلی",
+      "در یک پروژه واقعی با دیگران همکاری کنید — یک فلم کوتاه، یک نقاشی دیواری، یک کمپاین کوچک",
+      "مجموعه‌ای از کارهای خود را در طول زمان نگه دارید، نه فقط بهترین اثر واحد — رشد اهمیت دارد",
+      "آماده باشید تا روند خلاقانه خود را توضیح دهید، نه فقط نتیجه نهایی را نشان دهید"
+    ]},
+    pus:{ title:"هنر، ډیزاین، او رسنۍ", steps:[
+      "یوه پورتفولیو ویب پاڼه یا ټولنیز رسنۍ پاڼه جوړه کړئ چې ستاسو غوره کار ښیي",
+      "په هنري، عکاسۍ، فلم، یا ډیزاین سیالیو کې برخه واخلئ، حتی کوچنۍ سیمه‌ییزې سیالۍ",
+      "خپل کار په یوه واقعي ځای کې خپور کړئ — مجله، یوټیوب، انسټاګرام، یا سیمه‌ییزه نندارتون",
+      "د نورو سره په یوه واقعي پروژه کې همکاري وکړئ — یو لنډ فلم، یوه دیوال ښکلا، یوه کوچنۍ کمپاین",
+      "د وخت په اوږدو کې د خپلو کارونو ټولګه وساتئ، نه یوازې ستاسو یوازینی غوره اثر — وده اهمیت لري",
+      "چمتو اوسئ چې خپل هنري بهیر تشریح کړئ، نه یوازې وروستی پایله ښکاره کړئ"
+    ]}
+  }
+};
+const TIPS_ORDER = ["general","tech","medicine","business","social","arts"];
+
+/* ============== STATE ============== */
+let lang = (function(){ var saved = localStorage.getItem('rah-lang'); return (saved === 'prs' || saved === 'pus') ? saved : 'en'; })();
+let currentQ = 0;
+let answers = { age: null, country: null, level: null, field: null, english: null };
+let activeTab = "general";
+let tipsReturnScreen = "intro";
+const QUESTION_KEYS = ["age","country","level","field","english"];
+
+function t(key){ return T[lang][key]; }
+
+const NAV_LABELS = {
+  en: { nav_home:"Home", nav_scholarships:"Scholarships", nav_profile:"Build Your Profile", nav_guides:"Guides", nav_login:"Login / Sign Up" },
+  prs: { nav_home:"خانه", nav_scholarships:"بورسیه‌ها", nav_profile:"پروفایل خود را بسازید", nav_guides:"راهنماها", nav_login:"ورود / ثبت‌نام" },
+  pus: { nav_home:"کور", nav_scholarships:"بورسیې", nav_profile:"خپل پروفایل جوړ کړئ", nav_guides:"لارښودونه", nav_login:"ننوتل / نوم لیکنه" }
+};
+function applyLangToDoc(){
+  document.body.classList.toggle("rtl", lang !== "en");
+  document.getElementById("brandName").textContent = t("brand");
+  localStorage.setItem("rah-lang", lang);
+  const navLabels = NAV_LABELS[lang] || NAV_LABELS.en;
+  document.querySelectorAll("#siteNavLinks [data-i18n]").forEach(el => {
+    const key = el.getAttribute("data-i18n");
+    if(navLabels[key] !== undefined) el.textContent = navLabels[key];
+  });
+}
+
+function renderIntro(){
+  document.getElementById("introHero").textContent = t("introHero");
+  document.getElementById("introSub").textContent = t("introSub");
+  const wrap = document.getElementById("introPoints");
+  wrap.innerHTML = "";
+  t("points").forEach(p=>{
+    const div = document.createElement("div");
+    div.className = "intro-point";
+    div.innerHTML = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="#C08A2E" stroke-width="1.5"/><path d="M6 10L9 13L14 7" stroke="#C08A2E" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div class="intro-point-text"><b>${p.t}</b><span>${p.d}</span></div>`;
+    wrap.appendChild(div);
+  });
+  document.getElementById("startBtn").textContent = t("start");
+  document.getElementById("tipsLinkIntro").textContent = t("tipsLink");
+}
+
+function renderProgress(){
+  const wrap = document.getElementById("progressWrap");
+  if(currentScreen() !== "question"){ wrap.style.visibility = "hidden"; return; }
+  wrap.style.visibility = "visible";
+  wrap.innerHTML = "";
+  for(let i=0;i<5;i++){
+    const seg = document.createElement("div");
+    seg.className = "progress-seg";
+    const fill = document.createElement("span");
+    fill.style.width = i < currentQ ? "100%" : (i === currentQ ? "50%" : "0%");
+    seg.appendChild(fill);
+    wrap.appendChild(seg);
+  }
+}
+
+function currentScreen(){
+  if(document.getElementById("screen-intro").classList.contains("active")) return "intro";
+  if(document.getElementById("screen-question").classList.contains("active")) return "question";
+  if(document.getElementById("screen-tips").classList.contains("active")) return "tips";
+  return "results";
+}
+
+function showScreen(name){
+  ["intro","question","results","tips"].forEach(s=>{
+    document.getElementById("screen-"+s).classList.toggle("active", s===name);
+  });
+  renderProgress();
+  window.scrollTo(0,0);
+}
+
+function renderQuestion(){
+  const n = currentQ + 1;
+  document.getElementById("qEyebrow").textContent = t("q"+n+"Eyebrow");
+  document.getElementById("qTitle").textContent = t("q"+n+"Title");
+  const body = document.getElementById("qBody");
+  body.innerHTML = "";
+  const key = QUESTION_KEYS[currentQ];
+
+  if(key === "age"){
+    const input = document.createElement("input");
+    input.type = "number"; input.min = "10"; input.max = "60";
+    input.className = "num-input";
+    input.placeholder = t("q1Placeholder");
+    input.value = answers.age !== null ? answers.age : "";
+    input.addEventListener("input", ()=>{ answers.age = input.value ? parseInt(input.value) : null; updateNextState(); });
+    body.appendChild(input);
+  } else if(key === "field") {
+    const select = document.createElement("select");
+    select.className = "field-select";
+    const placeholder = document.createElement("option");
+    placeholder.value = ""; placeholder.disabled = true; placeholder.selected = answers.field === null;
+    placeholder.textContent = t("q4Title");
+    select.appendChild(placeholder);
+    t("q4Options").forEach((label, idx)=>{
+      const option = document.createElement("option");
+      option.value = idx; option.textContent = label;
+      option.selected = answers.field === idx;
+      select.appendChild(option);
+    });
+    select.addEventListener("change", ()=>{ answers.field = parseInt(select.value); updateNextState(); });
+    body.appendChild(select);
+  } else {
+    const optsWrap = document.createElement("div");
+    optsWrap.className = "options";
+    const options = t("q"+n+"Options");
+    options.forEach((label, idx)=>{
+      const btn = document.createElement("button");
+      btn.className = "option-btn";
+      btn.textContent = label;
+      if(answers[key] === idx) btn.classList.add("selected");
+      btn.addEventListener("click", ()=>{
+        answers[key] = idx;
+        [...optsWrap.children].forEach(c=>c.classList.remove("selected"));
+        btn.classList.add("selected");
+        updateNextState();
+      });
+      optsWrap.appendChild(btn);
+    });
+    body.appendChild(optsWrap);
+  }
+
+  document.getElementById("backBtn").textContent = t("back");
+  document.getElementById("backBtn").style.visibility = currentQ === 0 ? "hidden" : "visible";
+  document.getElementById("nextBtn").textContent = currentQ === 4 ? t("seeResults") : t("next");
+  updateNextState();
+}
+
+function updateNextState(){
+  const key = QUESTION_KEYS[currentQ];
+  const val = answers[key];
+  const has = val !== null && val !== undefined && val !== "";
+  document.getElementById("nextBtn").style.opacity = has ? "1" : "0.45";
+  document.getElementById("nextBtn").style.pointerEvents = has ? "auto" : "none";
+}
+
+function levelFromAnswer(){
+  switch(answers.level){
+    case 0: return "secondary"; case 1: return "undergrad"; case 2: return "masters"; case 3: return "phd";
+    default: return null;
+  }
+}
+
+function computeMatches(){
+  const userLevel = levelFromAnswer();
+  const userAge = answers.age;
+  const userCountryIdx = answers.country;
+  const userEnglish = answers.english;
+
+  const scored = SCHOLARSHIPS.map(s=>{
+    let score = 0; let hardFail = false;
+    if(s.levels.includes(userLevel)) score += 3; else hardFail = true;
+    if(userAge !== null){
+      if(userAge >= s.ageMin - 1 && userAge <= s.ageMax + 2) score += 2;
+      else if(userAge >= s.ageMin - 3 && userAge <= s.ageMax + 5) score += 0.5;
+      else score -= 1;
+    }
+    if(userCountryIdx === 6){ score += 1; }
+    else if(s.countryIdx === "any") score += 1;
+    else if(Array.isArray(s.countryIdx) && s.countryIdx.includes(userCountryIdx)) score += 3;
+    if(userEnglish !== null){
+      if(userEnglish >= s.englishMin) score += 2;
+      else score -= (s.englishMin - userEnglish) * 1.5;
+    }
+    return { s, score, hardFail };
+  });
+
+  const eligible = scored.filter(x=>!x.hardFail);
+  eligible.sort((a,b)=> b.score - a.score);
+  const ineligible = scored.filter(x=>x.hardFail).map(x=>x.s);
+  return { ranked: eligible, ineligible };
+}
+
+function matchLabel(score){
+  if(score >= 7) return { text: t("strongMatch"), strong:true };
+  if(score >= 4) return { text: t("goodMatch"), strong:false };
+  return { text: t("possibleMatch"), strong:false };
+}
+
+function renderResults(){
+  document.getElementById("resultsEyebrow").textContent = t("resultsEyebrow");
+  document.getElementById("resultsTitle").textContent = t("resultsTitle");
+  document.getElementById("resultsSub").textContent = t("resultsSub");
+  document.getElementById("otherLabel").textContent = t("otherLabel");
+  document.getElementById("restartBtn").textContent = t("restart");
+  document.getElementById("footerNote").textContent = t("footer");
+  document.getElementById("tipsLinkResults").textContent = t("tipsFromResults");
+
+  const { ranked, ineligible } = computeMatches();
+  // Show every degree-compatible programme, not just the first four.
+  const top = ranked;
+  const rest = [];
+  const content = SCHOLARSHIP_CONTENT[lang];
+
+  const list = document.getElementById("resultsList");
+  list.innerHTML = "";
+  top.forEach(({s, score})=>{
+    const c = content[s.id] || s;
+    const label = matchLabel(score);
+    const card = document.createElement("div");
+    card.className = "scholarship-card";
+    card.innerHTML = `
+      <div class="scholarship-top">
+        <div>
+          <h3 class="scholarship-name">${c.name}</h3>
+          <div class="scholarship-meta"><span>${t("countryLabel")}: ${c.country}</span></div>
+          <p class="scholarship-desc">${c.summary}</p>
+        </div>
+      </div>
+      <div class="scholarship-details">
+        <div class="detail-block"><div class="detail-label">${t("facts")}</div><ul class="detail-list">${c.facts.map(f=>`<li>${f}</li>`).join("")}</ul></div>
+        <div class="detail-block"><div class="detail-label">${t("eligibility")}</div><ul class="detail-list">${c.eligibility.map(f=>`<li>${f}</li>`).join("")}</ul></div>
+        <div class="detail-block"><div class="detail-label">${t("tips")}</div><ul class="detail-list">${c.tips.map(f=>`<li>${f}</li>`).join("")}</ul></div>
+      </div>
+    `;
+    const badge = document.createElement("span");
+    badge.className = "match-badge" + (label.strong ? " strong" : "");
+    badge.textContent = label.text;
+    const top1 = card.querySelector(".scholarship-top");
+    const chevron = document.createElement("div");
+    chevron.className = "chevron";
+    chevron.innerHTML = `<svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M5 8L10 13L15 8" stroke="#8a7a63" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    const badgeCol = document.createElement("div");
+    badgeCol.style.display = "flex"; badgeCol.style.flexDirection = "column";
+    badgeCol.style.alignItems = "flex-end"; badgeCol.style.gap = "8px";
+    badgeCol.appendChild(badge); badgeCol.appendChild(chevron);
+    top1.appendChild(badgeCol);
+    top1.addEventListener("click", ()=> card.classList.toggle("open"));
+    list.appendChild(card);
+  });
+
+  const otherWrap = document.getElementById("otherWrap");
+  const otherList = document.getElementById("otherList");
+  otherList.innerHTML = "";
+  const others = [...rest.map(r=>r.s), ...ineligible];
+  if(others.length === 0){ otherWrap.style.display = "none"; }
+  else {
+    otherWrap.style.display = "block";
+    others.forEach(s=>{
+      const c = content[s.id] || s;
+      const item = document.createElement("div");
+      item.className = "other-item";
+      item.innerHTML = `<span class="name">${c.name}</span>`;
+      item.addEventListener("click", ()=> alert(c.summary));
+      otherList.appendChild(item);
+    });
+  }
+}
+
+/* ============== PORTFOLIO TIPS RENDER ============== */
+function renderTips(){
+  document.getElementById("tipsEyebrow").textContent = t("tipsEyebrow");
+  document.getElementById("tipsTitle").textContent = t("tipsTitle");
+  document.getElementById("tipsSub").textContent = t("tipsSub");
+  document.getElementById("tipsBackBtn").textContent = t("tipsBack");
+
+  const tabScroll = document.getElementById("tabScroll");
+  tabScroll.innerHTML = "";
+  TIPS_ORDER.forEach(key=>{
+    const cat = PORTFOLIO_TIPS[key];
+    const pill = document.createElement("button");
+    pill.className = "tab-pill" + (activeTab === key ? " active" : "");
+    if(activeTab === key) pill.style.background = cat.color;
+    pill.innerHTML = `<span class="dot" style="background:${activeTab===key ? 'rgba(255,255,255,0.7)' : cat.color}"></span>${t("tabs")[key]}`;
+    pill.addEventListener("click", ()=>{ activeTab = key; renderTips(); });
+    tabScroll.appendChild(pill);
+  });
+
+  const cat = PORTFOLIO_TIPS[activeTab];
+  const panel = document.getElementById("tipsPanel");
+  panel.style.setProperty("--panel-accent", cat.color);
+  document.getElementById("tipsPanelTitle").textContent = cat[lang].title;
+  const stepsWrap = document.getElementById("tipsSteps");
+  stepsWrap.innerHTML = "";
+  cat[lang].steps.forEach((step, i)=>{
+    const row = document.createElement("div");
+    row.className = "tips-step";
+    row.innerHTML = `<div class="tips-step-num">${i+1}</div><div class="tips-step-text">${step}</div>`;
+    stepsWrap.appendChild(row);
+  });
+}
+
+/* ============== NAV EVENTS ============== */
+document.querySelectorAll(".lang-switch button").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    lang = btn.dataset.lang;
+    document.querySelectorAll(".lang-switch button").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    applyLangToDoc();
+    const s = currentScreen();
+    if(s==="intro") renderIntro();
+    if(s==="question") renderQuestion();
+    if(s==="results") renderResults();
+    if(s==="tips") renderTips();
+  });
+});
+
+document.getElementById("startBtn").addEventListener("click", ()=>{
+  currentQ = 0; showScreen("question"); renderQuestion();
+});
+
+document.getElementById("backBtn").addEventListener("click", ()=>{
+  if(currentQ > 0){ currentQ--; renderQuestion(); renderProgress(); }
+});
+
+document.getElementById("nextBtn").addEventListener("click", ()=>{
+  if(currentQ < 4){ currentQ++; renderQuestion(); renderProgress(); }
+  else {
+    const account = RahApp.get();
+    if(account){ account.finderAnswers = answers; localStorage.setItem("rah-user", JSON.stringify(account)); }
+    showScreen("results"); renderResults();
+  }
+});
+
+document.getElementById("restartBtn").addEventListener("click", ()=>{
+  answers = { age: null, country: null, level: null, field: null, english: null };
+  currentQ = 0; showScreen("intro"); renderIntro();
+});
+
+document.getElementById("tipsLinkIntro").addEventListener("click", ()=>{
+  tipsReturnScreen = "intro"; showScreen("tips"); renderTips();
+});
+document.getElementById("tipsLinkResults").addEventListener("click", ()=>{
+  tipsReturnScreen = "results"; showScreen("tips"); renderTips();
+});
+document.getElementById("tipsBackBtn").addEventListener("click", ()=>{
+  showScreen(tipsReturnScreen);
+  if(tipsReturnScreen === "intro") renderIntro(); else renderResults();
+});
+
+/* ============== INIT ============== */
+document.querySelectorAll(".lang-switch button").forEach(b=>{
+  b.classList.toggle("active", b.dataset.lang === lang);
+});
+applyLangToDoc();
+renderIntro();
+showScreen("intro");
+</script>
+</body>
+</html>

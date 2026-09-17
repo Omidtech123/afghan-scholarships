@@ -1,0 +1,55 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>My scholarship dashboard — Rah</title><meta name="description" content="Manage saved scholarships, upcoming deadlines, profile strength, and application progress."><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Work+Sans:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="css/styles.css"></head><body><header class="site-header"><div class="wrap nav-row"><a class="brand" href="index.html"><span class="brand-name">Rah</span></a><nav class="nav-links"><a href="scholarships.html" data-i18n="nav_scholarships">Scholarships</a><a href="profile.html" data-i18n="nav_profile">Build Your Profile</a><a href="guides.html" data-i18n="nav_guides">Guides</a><div class="lang-switch"><button data-lang="en" class="active">EN</button><button data-lang="prs">دری</button><button data-lang="pus">پښتو</button></div><span data-auth-nav></span></nav></div></header><main class="wrap"><section class="page-hero"><h1 id="welcome">Welcome back</h1><p data-i18n="sub">Your scholarship workspace: keep the next step clear and deadlines visible.</p></section><div class="metric-grid"><div class="metric"><b id="completion">40%</b><span data-i18n="m_completion">Profile completion</span></div><div class="metric"><b id="savedCount">0</b><span data-i18n="m_saved">Saved scholarships</span></div><div class="metric"><b id="applicationCount">0</b><span data-i18n="m_applications">Applications in progress</span></div></div><div class="two-col"><section class="panel"><h2 data-i18n="my_scholarships">My scholarships</h2><div id="savedList"><p data-i18n="empty_saved">Save opportunities from any scholarship page to build your shortlist.</p></div></section><aside><section class="panel"><h2 data-i18n="next_step">Next best step</h2><div class="recommendation" data-i18n="next_step_rec">Complete your profile so Rah can explain why each scholarship is a match.</div><a class="btn-primary" href="profile.html" data-i18n="build_profile_btn">Build my profile</a></section><section class="panel" style="margin-top:18px"><h2 data-i18n="upcoming_deadlines">Upcoming deadlines</h2><p data-i18n="deadlines_note">Dates vary by program. Confirm every deadline on the official scholarship page before applying.</p><a href="scholarships.html" data-i18n="browse_link">Browse verified opportunities →</a></section></aside></div></main><script src="js/data.js"></script><script src="js/app.js"></script><script src="js/i18n.js"></script><script>
+const DASH_STRINGS = {
+  en: { nav_scholarships:"Scholarships", nav_profile:"Build Your Profile", nav_guides:"Guides",
+    welcome_prefix:"Welcome back, ", sub:"Your scholarship workspace: keep the next step clear and deadlines visible.",
+    m_completion:"Profile completion", m_saved:"Saved scholarships", m_applications:"Applications in progress",
+    my_scholarships:"My scholarships", empty_saved:"Save opportunities from any scholarship page to build your shortlist.",
+    next_step:"Next best step", next_step_rec:"Complete your profile so Rah can explain why each scholarship is a match.", build_profile_btn:"Build my profile",
+    upcoming_deadlines:"Upcoming deadlines", deadlines_note:"Dates vary by program. Confirm every deadline on the official scholarship page before applying.", browse_link:"Browse verified opportunities →",
+    status_interested:"Interested", status_preparing:"Preparing", status_applied:"Applied", status_accepted:"Accepted", status_rejected:"Rejected"
+  },
+  prs: { nav_scholarships:"بورسیه‌ها", nav_profile:"پروفایل خود را بسازید", nav_guides:"راهنماها",
+    welcome_prefix:"خوش آمدید، ", sub:"فضای کاری بورسیه شما: گام بعدی را واضح و ضرب‌الاجل‌ها را قابل مشاهده نگه دارید.",
+    m_completion:"تکمیل پروفایل", m_saved:"بورسیه‌های ذخیره شده", m_applications:"درخواست‌های در حال انجام",
+    my_scholarships:"بورسیه‌های من", empty_saved:"فرصت‌ها را از هر صفحه بورسیه ذخیره کنید تا لیست کوتاه خود را بسازید.",
+    next_step:"بهترین گام بعدی", next_step_rec:"پروفایل خود را تکمیل کنید تا راه بتواند توضیح دهد چرا هر بورسیه یک تطبیق است.", build_profile_btn:"پروفایل من را بساز",
+    upcoming_deadlines:"ضرب‌الاجل‌های آینده", deadlines_note:"تاریخ‌ها بسته به برنامه متفاوت است. هر ضرب‌الاجل را در صفحه رسمی بورسیه پیش از درخواست تایید کنید.", browse_link:"فرصت‌های تایید شده را مرور کنید ←",
+    status_interested:"علاقه‌مند", status_preparing:"در حال آماده‌سازی", status_applied:"درخواست شده", status_accepted:"پذیرفته شده", status_rejected:"رد شده"
+  },
+  pus: { nav_scholarships:"بورسیې", nav_profile:"خپل پروفایل جوړ کړئ", nav_guides:"لارښودونه",
+    welcome_prefix:"بیرته ښه راغلاست، ", sub:"ستاسو د بورسیې کاري ځای: راتلونکی ګام روښانه او وروستۍ نېټې ښکاره وساتئ.",
+    m_completion:"د پروفایل بشپړتیا", m_saved:"خوندي شوې بورسیې", m_applications:"پرمختللي غوښتنلیکونه",
+    my_scholarships:"زما بورسیې", empty_saved:"فرصتونه د هرې بورسیې پاڼې نه خوندي کړئ چې خپله لنډه لیست جوړه کړئ.",
+    next_step:"غوره راتلونکی ګام", next_step_rec:"خپل پروفایل بشپړ کړئ چې راه وکولی شي تشریح کړي چې ولې هره بورسیه مطابقت لري.", build_profile_btn:"زما پروفایل جوړ کړئ",
+    upcoming_deadlines:"راتلونکې وروستۍ نېټې", deadlines_note:"نېټې د برنامې له مخې توپیر لري. هره وروستۍ نېټه مخکې له غوښتنلیک نه د بورسیې په رسمي پاڼه کې تایید کړئ.", browse_link:"تایید شوي فرصتونه وګورئ ←",
+    status_interested:"علاقمند", status_preparing:"چمتووالی", status_applied:"وسپارل شو", status_accepted:"ومنل شو", status_rejected:"رد شو"
+  }
+};
+
+const u=RahApp.get();
+if(!u){ location.href='login.html'; }
+else {
+  function renderDash(lang){
+    const s = DASH_STRINGS[lang] || DASH_STRINGS.en;
+    welcome.textContent = s.welcome_prefix + u.name.split(' ')[0];
+    const saved = u.saved || [];
+    savedCount.textContent = saved.length;
+    applicationCount.textContent = Object.keys(u.applications || {}).length;
+    completion.textContent = u.profile ? '80%' : '40%';
+    const statusLabels = { Interested: s.status_interested, Preparing: s.status_preparing, Applied: s.status_applied, Accepted: s.status_accepted, Rejected: s.status_rejected };
+    if(saved.length){
+      savedList.innerHTML = saved.map(id => {
+        const sch = SCHOLARSHIPS.find(x => x.id === id);
+        if(!sch) return '';
+        const loc = (lang !== 'en' && sch.translations && sch.translations[lang]) ? Object.assign({}, sch, sch.translations[lang]) : sch;
+        const status = u.applications?.[id]?.status || 'Interested';
+        const opts = ['Interested','Preparing','Applied','Accepted','Rejected'].map(st => `<option value="${st}" ${status===st?'selected':''}>${statusLabels[st]}</option>`).join('');
+        return `<div class="list-card"><div><h3>${loc.name}</h3><p>${loc.country} · ${loc.deadline}</p></div><select class="status" onchange="RahApp.setStatus('${id}',this.value)">${opts}</select></div>`;
+      }).join('');
+    } else {
+      savedList.innerHTML = `<p>${s.empty_saved}</p>`;
+    }
+  }
+  RahI18n.init(DASH_STRINGS, renderDash);
+}
+</script></body></html>

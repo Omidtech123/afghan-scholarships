@@ -1,0 +1,24 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Log in or create your Rah account</title><meta name="description" content="Create a Rah account to save scholarships, your profile, and application progress."><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Work+Sans:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet"><link rel="stylesheet" href="css/styles.css"></head><body><header class="site-header"><div class="wrap nav-row"><a class="brand" href="index.html"><span class="brand-name">Rah</span></a><nav class="nav-links"><a href="index.html" data-i18n="nav_home">Home</a><a href="scholarships.html" data-i18n="nav_scholarships">Scholarships</a><a href="profile.html" data-i18n="nav_profile">Build Your Profile</a><a href="guides.html" data-i18n="nav_guides">Guides</a><div class="lang-switch"><button data-lang="en" class="active">EN</button><button data-lang="prs">دری</button><button data-lang="pus">پښتو</button></div></nav></div></header><main class="wrap"><section class="page-hero"><h1 data-i18n="h1">Keep your opportunities in one place.</h1><p data-i18n="sub">Create an account to save scholarships, record your progress, and keep your profile ready for matching.</p></section><section class="login-shell panel"><div class="notice" data-i18n="notice">This working demo stores account data only in this browser. Production authentication requires a secure server-side provider.</div><h2 style="margin-top:22px" data-i18n="h2">Log in or sign up</h2><form id="authForm" class="form-grid"><div class="field full"><label for="name" data-i18n="label_name">Your name</label><input id="name" required autocomplete="name" placeholder="e.g. Amina Ahmadi" data-i18n-placeholder="ph_name"></div><div class="field full"><label for="email" data-i18n="label_email">Email address</label><input id="email" type="email" required autocomplete="email" placeholder="you@example.com"></div><div class="field full"><label for="password" data-i18n="label_password">Password</label><input id="password" type="password" minlength="6" required autocomplete="current-password" placeholder="At least 6 characters" data-i18n-placeholder="ph_password"></div><div class="field full"><button class="btn-primary" type="submit" data-i18n="submit_btn">Continue to my dashboard</button></div></form></section></main><script src="js/app.js"></script><script src="js/i18n.js"></script><script>
+document.getElementById('authForm').addEventListener('submit',e=>{e.preventDefault();const nameEl=document.getElementById('name'),emailEl=document.getElementById('email');RahApp.login(nameEl.value.trim(),emailEl.value.trim());location.href='dashboard.html'})
+const LOGIN_STRINGS = {
+  en: { nav_home:"Home", nav_scholarships:"Scholarships", nav_profile:"Build Your Profile", nav_guides:"Guides",
+    h1:"Keep your opportunities in one place.",
+    sub:"Create an account to save scholarships, record your progress, and keep your profile ready for matching.",
+    notice:"This working demo stores account data only in this browser. Production authentication requires a secure server-side provider.",
+    h2:"Log in or sign up", label_name:"Your name", ph_name:"e.g. Amina Ahmadi", label_email:"Email address", label_password:"Password", ph_password:"At least 6 characters",
+    submit_btn:"Continue to my dashboard" },
+  prs: { nav_home:"خانه", nav_scholarships:"بورسیه‌ها", nav_profile:"پروفایل خود را بسازید", nav_guides:"راهنماها",
+    h1:"فرصت‌های خود را در یک‌جا نگه دارید.",
+    sub:"یک حساب بسازید تا بورسیه‌ها را ذخیره کنید، پیشرفت خود را ثبت کنید، و پروفایل خود را برای تطبیق آماده نگه دارید.",
+    notice:"این نسخه کاری فقط معلومات حساب را در این براوزر ذخیره می‌کند. تایید هویت واقعی به یک ارائه‌دهنده مصئون سمت سرور نیاز دارد.",
+    h2:"ورود یا ثبت‌نام", label_name:"نام شما", ph_name:"به طور مثال: امینه احمدی", label_email:"آدرس ایمیل", label_password:"رمز عبور", ph_password:"حداقل ۶ حرف",
+    submit_btn:"ادامه به داشبورد من" },
+  pus: { nav_home:"کور", nav_scholarships:"بورسیې", nav_profile:"خپل پروفایل جوړ کړئ", nav_guides:"لارښودونه",
+    h1:"خپلې فرصتونه په یو ځای کې وساتئ.",
+    sub:"یو حساب جوړ کړئ چې بورسیې خوندي کړئ، خپل پرمختګ ثبت کړئ، او خپل پروفایل د مطابقت لپاره چمتو وساتئ.",
+    notice:"دا کاري بېلګه یوازې د حساب معلومات په دې براوزر کې زیرمه کوي. اصلي تصدیق یو خوندي سرور اړخ چمتو کوونکي ته اړتیا لري.",
+    h2:"ننوتل یا نوم لیکنه", label_name:"ستاسو نوم", ph_name:"لکه: امینه احمدي", label_email:"د ایمیل ادرس", label_password:"پټنوم", ph_password:"لږترلږه ۶ توري",
+    submit_btn:"زما ډشبورډ ته دوام ورکړئ" }
+};
+RahI18n.init(LOGIN_STRINGS);
+</script></body></html>
